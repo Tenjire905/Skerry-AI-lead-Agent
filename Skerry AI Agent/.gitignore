@@ -1,0 +1,13 @@
+.DS_Store
+.obsidian/
+.claude/
+node_modules/
+.pnpm-store/
+dist/
+.next/
+build/
+*.log
+*-backup.zip
+Skerry-backup.zip
+Unbenannt.md
+Willkommen.md
