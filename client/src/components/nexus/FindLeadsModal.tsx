@@ -7,10 +7,13 @@ import {
 } from "lucide-react";
 import { useResearchStore, TIER_CONFIGS } from "@/store/researchStore";
 import { useAccountTierStore, AccountTier } from "@/store/accountTierStore";
+import { useUsageStore } from "@/store/usageStore";
 import { useLeadStore } from "@/store/leadStore";
-import { generateLeadsWithAI } from "@/lib/openaiService";
-import { synthesizeLeads } from "@/lib/leadSynthesizer";
-import { apiConfig, hasApiKey } from "@/lib/apiConfig";
+import {
+  generateLeadsServer,
+  getEntitlementUsage,
+  type ServerGeneratedLead,
+} from "@/lib/skerryApi";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
@@ -25,8 +28,13 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
   const tier = useAccountTierStore((s) => s.tier);
   const { status, steps, leadsFoundCount, startResearch, reset, setLeadsFoundCount } = useResearchStore();
   const addLeads = useLeadStore((s) => s.addLeads);
+  const canStartRun = useUsageStore((s) => s.canStartRun);
+  const getTierUsage = useUsageStore((s) => s.getTierUsage);
+  const setRunsUsedFromServer = useUsageStore((s) => s.setRunsUsedFromServer);
+  const estimateRunCostUsd = useUsageStore((s) => s.estimateRunCostUsd);
+  const recordResearchRun = useUsageStore((s) => s.recordResearchRun);
   const config = TIER_CONFIGS[tier];
-  const openaiAvailable = hasApiKey("openai");
+  const tierUsage = getTierUsage(tier);
 
   const [phase, setPhase] = useState<"confirm" | "running" | "done">("confirm");
 
@@ -53,47 +61,61 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
     if (status === "complete") setPhase("done");
   }, [status]);
 
+  useEffect(() => {
+    if (!open) return;
+    void (async () => {
+      const usage = await getEntitlementUsage();
+      if (usage.ok && usage.tier === tier && typeof usage.runsUsed === "number") {
+        setRunsUsedFromServer(tier, usage.runsUsed);
+      }
+    })();
+  }, [open, setRunsUsedFromServer, tier]);
+
   const handleStart = async () => {
+    const clientGuard = canStartRun(tier);
+    if (!clientGuard.allowed) {
+      // Safety fallback if local state lags behind server.
+      toast.error(clientGuard.reason ?? "Monthly plan limit reached.");
+      return;
+    }
+
     setPhase("running");
     const businessContext = profile
       ? `${profile.businessDescription ?? ""} Target: ${profile.targetAudience ?? ""}`
       : "B2B SaaS company targeting growth-stage startups";
-    const targetCount = Math.min(config.maxLeadsPerRun, 5);
+    const targetCount = config.maxLeadsPerRun;
 
     // Start the visual research tracking (does its own setTimeout-driven steps)
     const researchPromise = startResearch(tier, businessContext);
 
-    // Try real AI generation first; fall back to synthesizer so leads always land.
-    let leads: ReturnType<typeof synthesizeLeads> = [];
-    if (openaiAvailable) {
-      try {
-        leads = await generateLeadsWithAI(
-          {
-            businessDescription: profile?.businessDescription ?? "B2B SaaS",
-            targetAudience: profile?.targetAudience ?? "Growth-stage startups",
-            tier,
-            count: targetCount,
-          },
-          apiConfig.openai
-        );
-      } catch (err) {
-        console.error("AI lead generation failed, falling back to synthesizer:", err);
-      }
+    let leads: ServerGeneratedLead[] = [];
+    let usedAi = false;
+    const generated = await generateLeadsServer({
+      requestedLeads: targetCount,
+      businessDescription: profile?.businessDescription ?? "B2B SaaS",
+      targetAudience: profile?.targetAudience ?? "Growth-stage startups",
+    });
+    if (!generated.ok || !generated.leads) {
+      toast.error(generated.error ?? "Lead generation failed on server.");
+      setPhase("confirm");
+      return;
     }
-
-    if (leads.length === 0) {
-      leads = synthesizeLeads({
-        count: targetCount,
-        tier,
-        businessDescription: profile?.businessDescription,
-        targetAudience: profile?.targetAudience,
-      });
+    if (generated.tier && typeof generated.runsUsed === "number") {
+      setRunsUsedFromServer(generated.tier, generated.runsUsed);
     }
+    leads = generated.leads;
+    usedAi = generated.source === "openai";
 
     // Wait for the visual research steps to finish before revealing the result.
     await researchPromise;
 
     addLeads(leads);
+    recordResearchRun({
+      tier,
+      generatedLeads: leads.length,
+      requestedLeads: targetCount,
+      usedAi,
+    });
     setLeadsFoundCount(leads.length);
   };
 
@@ -123,7 +145,9 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
     agency: "border-cyan-500/30 text-cyan-400 bg-cyan-500/5",
   };
 
-  const usagePct = Math.round((config.usedThisMonth / config.monthlyLimit) * 100);
+  const usagePct = Math.round((tierUsage.runsUsed / config.monthlyLimit) * 100);
+  const runGuard = canStartRun(tier);
+  const estimatedRunCost = estimateRunCostUsd(tier, config.maxLeadsPerRun, true);
 
   return (
     <AnimatePresence>
@@ -198,7 +222,7 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
                     <div>
                       <div className="mb-1.5 flex items-center justify-between text-[11px]">
                         <span className="text-muted-foreground">Monthly Usage</span>
-                        <span className="text-foreground">{config.usedThisMonth} / {config.monthlyLimit} runs</span>
+                        <span className="text-foreground">{tierUsage.runsUsed} / {config.monthlyLimit} runs</span>
                       </div>
                       <Progress value={usagePct} className="h-1.5" />
                       {usagePct > 80 && (
@@ -206,6 +230,9 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
                           ⚠ Approaching monthly limit. Consider upgrading.
                         </p>
                       )}
+                      <p className="mt-1 text-[11px] text-muted-foreground">
+                        Estimated spend this month: ${tierUsage.estimatedSpendUsd.toFixed(2)}
+                      </p>
                     </div>
 
                     {/* Business context */}
@@ -216,21 +243,26 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
                       </div>
                     )}
 
-                    {/* API key warning */}
-                    {!openaiAvailable && (
-                      <div className="flex items-start gap-2 rounded-lg bg-amber-500/10 border border-amber-500/20 px-3 py-2.5 text-xs text-amber-400">
-                        <Lock className="h-3.5 w-3.5 mt-0.5 flex-shrink-0" />
-                        <span>No OpenAI API key set. Leads will be generated as demo data. Add your key in Settings for real AI generation.</span>
-                      </div>
-                    )}
+                    <div className="flex items-start gap-2 rounded-lg bg-cyan-500/10 border border-cyan-500/20 px-3 py-2.5 text-xs text-cyan-300">
+                      <Lock className="h-3.5 w-3.5 mt-0.5 flex-shrink-0" />
+                      <span>Lead generation runs server-side with protected keys and authenticated access.</span>
+                    </div>
 
                     <Button
                       onClick={handleStart}
+                      disabled={!runGuard.allowed}
                       className={`w-full h-11 bg-gradient-to-r ${tierColors[tier]} text-white font-semibold shadow-lg transition-all hover:scale-[1.01]`}
                     >
                       <Zap className="mr-2 h-4 w-4" />
-                      Start Research ({config.maxLeadsPerRun} leads max)
+                      {runGuard.allowed
+                        ? `Start Research (${config.maxLeadsPerRun} leads max · est. $${estimatedRunCost.toFixed(2)})`
+                        : "Monthly run limit reached"}
                     </Button>
+                    {!runGuard.allowed && (
+                      <p className="text-[11px] text-amber-400">
+                        Plan cap reached. Upgrade in Settings to continue runs.
+                      </p>
+                    )}
                   </motion.div>
                 )}
 

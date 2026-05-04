@@ -5,9 +5,7 @@ import ReactMarkdown from "react-markdown";
 import { Send, Loader2, CheckCircle2, AlertTriangle, Variable, Copy, Sparkles } from "lucide-react";
 import { useLeadStore, type Lead } from "@/store/leadStore";
 import { useAuthStore } from "@/store/authStore";
-import { generateEmailWithAI } from "@/lib/openaiService";
-import { apiConfig, hasApiKey } from "@/lib/apiConfig";
-import { sendEmail } from "@/lib/skerryApi";
+import { generateEmailServer, sendEmail } from "@/lib/skerryApi";
 import { useT } from "@/lib/i18n";
 import { toast } from "sonner";
 
@@ -97,10 +95,6 @@ function ForgePage() {
 
   const handleGenerateWithAI = async () => {
     if (!lead) return;
-    if (!hasApiKey("openai")) {
-      toast.error("OpenAI API key not configured. Contact your administrator.");
-      return;
-    }
     setIsGenerating(true);
     try {
       const profile = (() => {
@@ -109,28 +103,33 @@ function ForgePage() {
           return raw ? JSON.parse(raw) : null;
         } catch { return null; }
       })();
-      const generated = await generateEmailWithAI(
-        {
-          lead: {
-            firstName: lead.personal.firstName,
-            lastName: lead.personal.lastName,
-            title: lead.personal.title,
-            organization: lead.organization,
-            websiteContext: lead.extraction.websiteContext,
-            personContext: lead.extraction.personContext,
-            uniqueAngles: lead.extraction.uniqueAngles,
-          },
-          businessDescription: profile?.businessDescription ?? "B2B SaaS company",
-          senderName: user?.name ?? "Skerry",
+      const generated = await generateEmailServer({
+        lead: {
+          firstName: lead.personal.firstName,
+          lastName: lead.personal.lastName,
+          title: lead.personal.title,
+          organization: { name: lead.organization.name },
+          websiteContext: lead.extraction.websiteContext,
+          personContext: lead.extraction.personContext,
+          uniqueAngles: lead.extraction.uniqueAngles,
         },
-        apiConfig.openai
-      );
-      setEditedMd(generated);
+        businessDescription: profile?.businessDescription ?? "B2B SaaS company",
+        senderName: user?.name ?? "Skerry",
+      });
+      if (!generated.ok || !generated.markdown) {
+        toast.error(generated.error ?? "AI generation failed on server.");
+        return;
+      }
+      setEditedMd(generated.markdown);
       setIsEditing(false);
-      updateLeadEmail(lead.id, generated);
-      toast.success("AI-generated email ready!");
+      updateLeadEmail(lead.id, generated.markdown);
+      toast.success(
+        generated.source === "openai"
+          ? "AI-generated email ready!"
+          : "Fallback email ready (provider unavailable)."
+      );
     } catch (err) {
-      toast.error("AI generation failed. Check your API key.");
+      toast.error("AI generation failed.");
       console.error(err);
     } finally {
       setIsGenerating(false);

@@ -5,9 +5,12 @@ import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/authStore";
 import { useAccountTierStore } from "@/store/accountTierStore";
 import { TIER_CONFIGS } from "@/store/researchStore";
+import { useUsageStore } from "@/store/usageStore";
 import { Progress } from "@/components/ui/progress";
 import { apiConfig, hasApiKey } from "@/lib/apiConfig";
+import { getEntitlementUsage } from "@/lib/skerryApi";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({
@@ -26,6 +29,10 @@ function SettingsPage() {
   const tier = useAccountTierStore((s) => s.tier);
   const setTier = useAccountTierStore((s) => s.setTier);
   const config = TIER_CONFIGS[tier];
+  const getTierUsage = useUsageStore((s) => s.getTierUsage);
+  const setRunsUsedFromServer = useUsageStore((s) => s.setRunsUsedFromServer);
+  const resetAllUsage = useUsageStore((s) => s.resetAllUsage);
+  const tierUsage = getTierUsage(tier);
   const user = useAuthStore((s) => s.user);
   const isDeveloper = user?.role === "developer";
   const { mode, setMode } = useTheme();
@@ -33,10 +40,20 @@ function SettingsPage() {
   const handleResetOnboarding = () => {
     localStorage.removeItem("skerry-onboarding-profile");
     localStorage.removeItem("skerry-account-tier");
+    resetAllUsage();
     window.location.reload();
   };
 
-  const usagePct = Math.round((config.usedThisMonth / config.monthlyLimit) * 100);
+  const usagePct = Math.round((tierUsage.runsUsed / config.monthlyLimit) * 100);
+
+  useEffect(() => {
+    void (async () => {
+      const usage = await getEntitlementUsage();
+      if (usage.ok && usage.tier === tier && typeof usage.runsUsed === "number") {
+        setRunsUsedFromServer(tier, usage.runsUsed);
+      }
+    })();
+  }, [setRunsUsedFromServer, tier]);
 
   // Status of provider-paid AI services. Customers see a high-level status,
   // never the actual keys. Developers see masked keys.
@@ -168,10 +185,13 @@ function SettingsPage() {
         <div className="mt-4 rounded-xl glass p-4">
           <div className="mb-2 flex items-center justify-between text-xs">
             <span className="text-muted-foreground">Monthly Usage ({config.label})</span>
-            <span className="text-foreground">{config.usedThisMonth} / {config.monthlyLimit} runs</span>
+            <span className="text-foreground">{tierUsage.runsUsed} / {config.monthlyLimit} runs</span>
           </div>
           <Progress value={usagePct} className="h-1.5" />
           <p className="mt-2 text-[11px] text-muted-foreground">{config.description}</p>
+          <p className="mt-1 text-[11px] text-muted-foreground">
+            Leads generated: {tierUsage.leadsGenerated} · Estimated AI spend: ${tierUsage.estimatedSpendUsd.toFixed(2)}
+          </p>
         </div>
       </div>
 

@@ -1,15 +1,24 @@
 /**
  * Fallback lead synthesizer.
  *
- * When OpenAI is unavailable (no key, call failed, dev mode), this generates
- * plausible-looking demo leads so the user can still walk through the app.
- * Real leads should always come via `generateLeadsWithAI` in `openaiService.ts`.
+ * Used by server endpoints as deterministic fallback when provider calls fail.
  *
- * The output shape matches `GeneratedLead` so it's a drop-in replacement.
+ * The output shape matches the server/client lead generation contract.
  */
 
-import type { GeneratedLead } from "./openaiService";
 import type { AccountTier } from "@/store/accountTierStore";
+
+export interface GeneratedLead {
+  firstName: string;
+  lastName: string;
+  title: string;
+  email: string;
+  linkedin: string;
+  organization: { name: string; website: string };
+  websiteContext: string;
+  personContext: string;
+  uniqueAngles: string[];
+}
 
 interface SynthesizeInput {
   count: number;

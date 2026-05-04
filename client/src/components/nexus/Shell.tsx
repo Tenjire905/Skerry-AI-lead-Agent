@@ -26,10 +26,17 @@ export function Shell() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showFindLeads, setShowFindLeads] = useState(false);
   const tier = useAccountTierStore((s) => s.tier);
+  const setTier = useAccountTierStore((s) => s.setTier);
   const initializeTier = useAccountTierStore((s) => s.initializeFromLocalStorage);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const isHydrating = useAuthStore((s) => s.isHydrating);
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
+  const hydrateSession = useAuthStore((s) => s.hydrateSession);
+
+  useEffect(() => {
+    void hydrateSession();
+  }, [hydrateSession]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -38,13 +45,24 @@ export function Shell() {
         setShowOnboarding(true);
       }
       initializeTier();
+      if (user?.tier) {
+        setTier(user.tier);
+      }
     }
-  }, [isAuthenticated, initializeTier]);
+  }, [isAuthenticated, initializeTier, setTier, user?.tier]);
 
   const handleOnboardingComplete = () => {
     setShowOnboarding(false);
     initializeTier();
   };
+
+  if (isHydrating) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background text-sm text-muted-foreground">
+        Restoring secure session...
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return <LoginPage />;

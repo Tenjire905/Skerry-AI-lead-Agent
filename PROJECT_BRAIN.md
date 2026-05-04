@@ -3,7 +3,7 @@
 **Living document. Single source of truth for every product, business, and engineering decision.**
 Update this file before code whenever a new direction is chosen. Code is implementation; this file is intent.
 
-Last updated: 2026-05-02
+Last updated: 2026-05-04
 
 ---
 
@@ -49,12 +49,12 @@ These caps gate API spend. Don't hand out unlimited runs.
 
 ```
 client/  Vite + React 19 + TanStack Router (client-only SPA)
-  routes/        __root, index (Pulse), workspace, forge, insight, settings
+  routes/        __root, index (Pulse), clients, icp, assets, workspace, suppression, analytics, forge, insight, settings
   components/
     nexus/       LoginPage, Onboarding, FindLeadsModal, Shell, AppSidebar, StepProgress
     ui/          shadcn primitives
-  store/         leadStore, researchStore, authStore, accountTierStore (zustand + persist)
-  lib/           apiConfig, openaiService, leadSynthesizer, i18n, utils
+  store/         leadStore, workspaceStore, suppressionStore, researchStore, authStore, accountTierStore, usageStore (zustand + persist)
+  lib/           apiConfig, leadSynthesizer, skerryApi, i18n, utils
   data/          mockLeads.ts (DEPRECATED — kept for ref only, never imported by UI)
 shared/          shared constants
 server/          Express scaffolding for future API proxy (production keys)
@@ -83,11 +83,10 @@ server/          Express scaffolding for future API proxy (production keys)
 
 ### API key handling
 
-- Source: `.env` at project root, prefixed `VITE_*` so Vite exposes them.
-- Read via `client/src/lib/apiConfig.ts` — single import point. `hasApiKey(service)`
-  before any call. **Never** read `import.meta.env` outside this file.
-- Production: keys end up in client bundle. Long-term plan: move sensitive
-  calls behind Express endpoints in `server/index.ts`.
+- Source of truth for provider keys is server env (e.g. `OPENAI_API_KEY`,
+  `RESEND_API_KEY`, `NEVERBOUNCE_API_KEY`).
+- Client must call authenticated server endpoints for AI + send/verify flows.
+- Do not introduce new browser-side provider calls.
 
 ## 5 · Invariants — DO NOT VIOLATE
 
@@ -113,10 +112,9 @@ server/          Express scaffolding for future API proxy (production keys)
 
 1. User clicks "Find New Leads" in Shell header.
 2. `FindLeadsModal` reads onboarding profile (business + audience).
-3. If `hasApiKey("openai")`: call `generateLeadsWithAI` with tier-aware depth.
-4. **Always** fall back to `synthesizeLeads` if AI returns empty / errors —
-   guarantees leads land in the store. Synthesizer always emits a deterministic
-   email (`first.last@org-domain`).
+3. Call server generation endpoint (`/api/leads/generate`) only.
+4. Server enforces tier/month limits, consumes usage, then tries provider AI.
+   If provider fails, server falls back to deterministic synthesizer output.
 5. `addLeads()` writes to `useLeadStore`. Each lead has `stage: "source"`,
    blank `pushedToInstantly`, and a markdown newsletter draft pre-filled.
 6. Modal shows "Research Complete → View Leads". Click navigates to `/workspace`.
@@ -169,6 +167,37 @@ server/          Express scaffolding for future API proxy (production keys)
 - **2026-05-02** Two-scope env: `VITE_*` for client bundle, plain names for
   server-only secrets. Server-only is preferred for production keys; the
   Express endpoints are the canonical caller.
+- **2026-05-04** Added persisted usage enforcement via `useUsageStore`
+  (`client/src/store/usageStore.ts`). Research runs are now hard-capped by
+  tier monthly limits, carry a monthly rollover reset, and record per-tier
+  estimated AI spend + generated leads. `FindLeadsModal` blocks new runs when
+  limit is reached and surfaces estimated run cost before launch; `Settings`
+  now shows real monthly usage/spend from the store (no static config counter).
+- **2026-05-04** Migrated auth from client-only credential checks to
+  server-backed session auth endpoints in `server/index.ts`:
+  `/api/auth/login`, `/api/auth/session`, `/api/auth/logout`. Sessions are
+  signed (HMAC), stored in HttpOnly cookies, and hydrated on app boot via
+  `useAuthStore.hydrateSession()`. `Shell` now blocks protected UI until
+  hydration completes and then enforces authenticated entry.
+- **2026-05-04** Added auth hardening controls on the server: protected
+  sensitive endpoints (`/api/email/send`, `/api/email/verify`) now require a
+  valid session cookie; `/api/auth/login` now includes in-memory brute-force
+  throttling per IP+email window.
+- **2026-05-04** Added server-authoritative entitlement endpoints:
+  `GET /api/entitlements/usage` and
+  `POST /api/entitlements/research/start`. Run limits are now enforced on the
+  backend per authenticated user+tier+month before research can start. Client
+  surfaces (`FindLeadsModal`, `Settings`) now hydrate displayed run usage from
+  server truth and sync into local usage store for UI continuity.
+- **2026-05-04** Lead generation moved server-side via
+  `POST /api/leads/generate` (auth required). Browser no longer calls OpenAI
+  for lead generation. Backend now performs tier-bound lead count validation,
+  monthly entitlement checks, run consumption, OpenAI call with server-only key,
+  and deterministic synthesizer fallback if provider call fails.
+- **2026-05-04** Forge email drafting moved server-side via
+  `POST /api/email/generate` (auth required). Browser no longer calls OpenAI
+  directly for draft generation. Backend uses server-only OpenAI key and falls
+  back to deterministic synthesized draft when provider is unavailable.
 
 ## 8b · Email send pipeline (Forge → server → Resend)
 
