@@ -22,7 +22,11 @@ export interface Lead {
   pushedToInstantly?: boolean;
 }
 
-const md = (l: { firstName: string; org: string; angle: string }) => `# The Future of ${l.org}
+const md = (l: {
+  firstName: string;
+  org: string;
+  angle: string;
+}) => `# The Future of ${l.org}
 
 **Brief for ${l.firstName}** — a one-page read on what's quietly compounding in your category.
 
@@ -63,12 +67,21 @@ export const mockLeads: Lead[] = [
         "TechCorp is an AI-first infrastructure company positioning itself as the orchestration layer for enterprise model deployment. Their public copy reads like a strategy memo — long-form essays, a quarterly index report, and a partner network spanning three continents. The tone is decidedly senior; nothing on the homepage is targeted below the VP level.\n\nUnder the surface the engineering team has been shipping aggressively — three product surfaces in six months, each tied to a specific Fortune 500 design partner. Hiring signals (six forward-deployed engineering roles) suggest they're scaling delivery rather than core R&D, which is the classic posture of a company moving from design-partner mode to repeatable enterprise motion.",
       personContext:
         "Zac is a second-time founder with a quantitative background (physics undergrad, two years in algorithmic trading) and a clear narrative voice — his LinkedIn essays routinely break 50K impressions. He joined TechCorp's predecessor 14 months ago after a five-year run scaling two AI infra companies, both of which exited within 18 months of his arrival. He keynoted at AI Summit NY and was on a private CTO roundtable hosted by a tier-one VC last spring.",
-      uniqueAngles: ["AI-First Pivot", "Legacy System Replacement", "Strategic Scalability"],
+      uniqueAngles: [
+        "AI-First Pivot",
+        "Legacy System Replacement",
+        "Strategic Scalability",
+      ],
     },
     newsletter: {
       title: "The Future of AI",
       subheading: "How TechCorp leads the way",
-      body: md({ firstName: "Zac", org: "TechCorp", angle: "Your AI-first pivot is doing the heavy lifting in the background — Fortune 500 buyers are quoting your index report in private channels we monitor." }),
+      body: md({
+        firstName: "Zac",
+        org: "TechCorp",
+        angle:
+          "Your AI-first pivot is doing the heavy lifting in the background — Fortune 500 buyers are quoting your index report in private channels we monitor.",
+      }),
     },
     stage: "send",
     pushedToInstantly: false,
@@ -88,12 +101,21 @@ export const mockLeads: Lead[] = [
         "Helios Labs operates at the intersection of applied AI and renewable infrastructure analytics. Their positioning centers on 'predictive grid intelligence' — a category they appear to be actively defining through long-form essays and a quarterly index report.\n\nUnder the surface the engineering team is shipping at an aggressive cadence and hiring forward-deployed engineers, signaling a move from design-partner mode to repeatable enterprise motion.",
       personContext:
         "Aria has a rare combination of quantitative depth and a clear narrative voice. She joined Helios 14 months ago after scaling growth at two climate-tech companies, both of which exited within 18 months. Recently keynoted at ClimateWeek NY.",
-      uniqueAngles: ["Index Report Authority", "Narrative-Led Category Creation", "Enterprise GTM Scale-Up"],
+      uniqueAngles: [
+        "Index Report Authority",
+        "Narrative-Led Category Creation",
+        "Enterprise GTM Scale-Up",
+      ],
     },
     newsletter: {
       title: "The Future of Grid Intelligence",
       subheading: "Why utilities are quoting your index report",
-      body: md({ firstName: "Aria", org: "Helios Labs", angle: "Your index report is doing the heavy lifting — utility leaders are quoting it in private channels we monitor." }),
+      body: md({
+        firstName: "Aria",
+        org: "Helios Labs",
+        angle:
+          "Your index report is doing the heavy lifting — utility leaders are quoting it in private channels we monitor.",
+      }),
     },
     stage: "draft",
     pushedToInstantly: false,
@@ -106,18 +128,30 @@ export const mockLeads: Lead[] = [
       title: "Founder & CEO",
       linkedin: "https://linkedin.com/in/priyaraman",
     },
-    organization: { name: "Lattice Health", website: "https://latticehealth.co" },
+    organization: {
+      name: "Lattice Health",
+      website: "https://latticehealth.co",
+    },
     extraction: {
       websiteContext:
         "Lattice Health is a quiet, founder-led company building structured data infrastructure for outpatient clinics. The site is intentionally minimal — one page, no team photos, a single email capture. Design-by-conviction, not lack of resources.\n\nEverything signals a deliberate, customer-led growth posture: long sales cycles, a small set of design partners, and a clear bias toward depth over breadth.",
       personContext:
         "Priya is a physician-turned-founder with a Stanford MD/MBA and a previous exit. She writes a low-frequency, high-signal Substack quietly read by health-system CIOs. She does not respond to generic outbound.",
-      uniqueAngles: ["Substack-First Engagement", "Clinical Post-Mortem Framing", "Minimalist Buyer Match"],
+      uniqueAngles: [
+        "Substack-First Engagement",
+        "Clinical Post-Mortem Framing",
+        "Minimalist Buyer Match",
+      ],
     },
     newsletter: {
       title: "Structured Ambiguity",
       subheading: "Why outpatient data stays broken",
-      body: md({ firstName: "Priya", org: "Lattice Health", angle: "Your essay on 'structured ambiguity' is the clearest articulation we've seen of why outpatient data stays broken." }),
+      body: md({
+        firstName: "Priya",
+        org: "Lattice Health",
+        angle:
+          "Your essay on 'structured ambiguity' is the clearest articulation we've seen of why outpatient data stays broken.",
+      }),
     },
     stage: "analyze",
     pushedToInstantly: false,
@@ -149,33 +183,39 @@ export const useLeadStore = create<LeadStore>((set, get) => ({
   // mockLeads stays exported above for dev/seed reference but is NOT loaded by default.
   leads: [],
   selectedId: "",
-  select: (id) => set({ selectedId: id }),
-  pushToInstantly: (id) =>
-    set((s) => ({
-      leads: s.leads.map((l) =>
-        l.id === id ? { ...l, pushedToInstantly: true, stage: "send" } : l,
+  select: id => set({ selectedId: id }),
+  pushToInstantly: id =>
+    set(s => ({
+      leads: s.leads.map(l =>
+        l.id === id ? { ...l, pushedToInstantly: true, stage: "send" } : l
       ),
     })),
   selected: () => {
     const s = get();
-    return s.leads.find((l) => l.id === s.selectedId) ?? s.leads[0];
+    return s.leads.find(l => l.id === s.selectedId) ?? s.leads[0];
   },
   clearAll: () => set({ leads: [], selectedId: "" }),
   stats: () => {
     const { leads } = get();
     const total = leads.length;
     const insightsGenerated = leads.filter(
-      (l) => l.extraction.websiteContext.length > 0 || l.extraction.uniqueAngles.length > 0
+      l =>
+        l.extraction.websiteContext.length > 0 ||
+        l.extraction.uniqueAngles.length > 0
     ).length;
-    const emailsReady = leads.filter((l) => (l.newsletter.body ?? "").length > 0).length;
-    const sent = leads.filter((l) => l.pushedToInstantly).length;
+    const emailsReady = leads.filter(
+      l => (l.newsletter.body ?? "").length > 0
+    ).length;
+    const sent = leads.filter(l => l.pushedToInstantly).length;
     const withVerifiedEmail = leads.filter(
-      (l) => !!l.personal.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(l.personal.email)
+      l =>
+        !!l.personal.email &&
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(l.personal.email)
     ).length;
     return { total, insightsGenerated, emailsReady, sent, withVerifiedEmail };
   },
-  addLeads: (newLeads) => {
-    set((s) => {
+  addLeads: newLeads => {
+    set(s => {
       const nextId = s.leads.length + 1;
       const mapped: Lead[] = newLeads.map((l, i) => {
         const raw = l as Record<string, unknown> & {
@@ -226,8 +266,8 @@ export const useLeadStore = create<LeadStore>((set, get) => ({
     });
   },
   updateLeadEmail: (id, emailBody) => {
-    set((s) => ({
-      leads: s.leads.map((l) =>
+    set(s => ({
+      leads: s.leads.map(l =>
         l.id === id
           ? { ...l, newsletter: { ...l.newsletter, body: emailBody } }
           : l

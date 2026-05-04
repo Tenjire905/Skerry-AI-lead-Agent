@@ -1,5 +1,12 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Users, Mail, Settings, Hexagon, CreditCard } from "lucide-react";
+import {
+  LayoutDashboard,
+  Users,
+  Mail,
+  Settings,
+  Hexagon,
+  CreditCard,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -25,7 +32,7 @@ const items = [
 export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
-  const currentPath = useRouterState({ select: (r) => r.location.pathname });
+  const currentPath = useRouterState({ select: r => r.location.pathname });
   const isActive = (p: string) => currentPath === p;
   const t = useT();
 
@@ -38,8 +45,12 @@ export function AppSidebar() {
           </div>
           {!collapsed && (
             <div className="flex flex-col leading-none">
-              <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Skerry</span>
-              <span className="text-sm font-semibold text-gradient-cyber">LeadGen OS</span>
+              <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                Skerry
+              </span>
+              <span className="text-sm font-semibold text-gradient-cyber">
+                LeadGen OS
+              </span>
             </div>
           )}
         </Link>
@@ -50,11 +61,15 @@ export function AppSidebar() {
           <SidebarGroupLabel>Workspace</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => {
+              {items.map(item => {
                 const label = "title" in item ? item.title : t(item.titleKey);
                 return (
                   <SidebarMenuItem key={item.titleKey}>
-                    <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={label}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive(item.url)}
+                      tooltip={label}
+                    >
                       <Link to={item.url} className="flex items-center gap-2.5">
                         <item.icon className="h-4 w-4" />
                         {!collapsed && <span>{label}</span>}
@@ -63,10 +78,10 @@ export function AppSidebar() {
                   </SidebarMenuItem>
                 );
               })}
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
-    </SidebarContent>
-  </Sidebar>
-);
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+    </Sidebar>
+  );
 }

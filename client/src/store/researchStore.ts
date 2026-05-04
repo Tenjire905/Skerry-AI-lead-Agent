@@ -104,7 +104,7 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
 
     for (let i = 0; i < initialSteps.length; i++) {
       // Mark current step as running
-      set((s) => ({
+      set(s => ({
         steps: s.steps.map((step, idx) =>
           idx === i ? { ...step, status: "running" } : step
         ),
@@ -113,7 +113,7 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
 
       // Simulate step duration based on depth
       const baseDuration = tier === "solo" ? 600 : tier === "team" ? 800 : 1000;
-      await new Promise((r) => setTimeout(r, baseDuration + Math.random() * 400));
+      await new Promise(r => setTimeout(r, baseDuration + Math.random() * 400));
 
       // Mark step as done with a detail
       const details: Record<string, string> = {
@@ -128,7 +128,7 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
         "CRM Deduplication": `Removed ${Math.floor(Math.random() * 5 + 1)} duplicates`,
       };
 
-      set((s) => ({
+      set(s => ({
         steps: s.steps.map((step, idx) =>
           idx === i
             ? { ...step, status: "done", detail: details[step.label] ?? "Done" }

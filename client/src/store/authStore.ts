@@ -1,6 +1,11 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { authLogin, authLogout, authSession, type AuthUser } from "@/lib/skerryApi";
+import {
+  authLogin,
+  authLogout,
+  authSession,
+  type AuthUser,
+} from "@/lib/skerryApi";
 
 export type UserRole = "user" | "developer";
 
@@ -8,14 +13,17 @@ interface AuthStore {
   isAuthenticated: boolean;
   isHydrating: boolean;
   user: AuthUser | null;
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  login: (
+    email: string,
+    password: string
+  ) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   hydrateSession: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthStore>()(
   persist(
-    (set) => ({
+    set => ({
       isAuthenticated: false,
       isHydrating: true,
       user: null,
@@ -35,7 +43,11 @@ export const useAuthStore = create<AuthStore>()(
         set({ isHydrating: true });
         const response = await authSession();
         if (response.ok && response.user) {
-          set({ isAuthenticated: true, user: response.user, isHydrating: false });
+          set({
+            isAuthenticated: true,
+            user: response.user,
+            isHydrating: false,
+          });
           return;
         }
         set({ isAuthenticated: false, user: null, isHydrating: false });
@@ -43,7 +55,7 @@ export const useAuthStore = create<AuthStore>()(
     }),
     {
       name: "skerry-auth",
-      partialize: (s) => ({
+      partialize: s => ({
         isAuthenticated: s.isAuthenticated,
         user: s.user,
       }),

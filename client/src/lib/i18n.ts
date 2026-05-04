@@ -22,7 +22,8 @@ const translations = {
     "settings.eyebrow.integrations": "Integrations",
     "settings.title.api": "API Connections",
     "settings.title.status": "Status",
-    "settings.subtitle": "Health of every external system the pipeline depends on.",
+    "settings.subtitle":
+      "Health of every external system the pipeline depends on.",
     "settings.status.connected": "Connected",
     "settings.status.reauth": "Re-auth",
     "settings.eyebrow.preferences": "Preferences",
@@ -60,7 +61,8 @@ const translations = {
     "pulse.integrity.gpt": "Analyze",
     "pulse.integrity.instantly": "Send",
     "pulse.focus.title": "Today's focus",
-    "pulse.focus.subtitle": "5 high-signal leads completed extraction. 3 are ready to send.",
+    "pulse.focus.subtitle":
+      "5 high-signal leads completed extraction. 3 are ready to send.",
     "pulse.focus.cta": "View Leads",
 
     // Workspace page
@@ -106,14 +108,13 @@ const translations = {
     "forge.titleA": "Email",
     "forge.titleB": "Forge",
     "forge.subtitle":
-      'Variables on the left, email preview on the right. Send via Instantly.ai when ready.',
+      "Variables on the left, email preview on the right. Send via Instantly.ai when ready.",
     "forge.variables": "Variables",
     "forge.variablesSub": "Extracted from lead data + AI enrichment.",
     "forge.missingValue": "Missing value",
     "forge.copyVar": "Copy variable",
     "forge.missingContact": "Missing contact",
-    "forge.missingContactDesc":
-      "This lead has no email — sending is disabled.",
+    "forge.missingContactDesc": "This lead has no email — sending is disabled.",
     "forge.previewLabel": "Email Preview",
     "forge.push": "Send via Instantly.ai",
     "forge.pushing": "Sending…",
@@ -148,7 +149,8 @@ const translations = {
     "settings.eyebrow.integrations": "Integrationen",
     "settings.title.api": "API",
     "settings.title.status": "Status",
-    "settings.subtitle": "Status aller externen Systeme, von denen die Pipeline abhängt.",
+    "settings.subtitle":
+      "Status aller externen Systeme, von denen die Pipeline abhängt.",
     "settings.status.connected": "Verbunden",
     "settings.status.reauth": "Neu anmelden",
     "settings.eyebrow.preferences": "Einstellungen",
@@ -268,15 +270,15 @@ interface LanguageStore {
 
 export const useLanguageStore = create<LanguageStore>()(
   persist(
-    (set) => ({
+    set => ({
       language: "en",
-      setLanguage: (language) => set({ language }),
+      setLanguage: language => set({ language }),
     }),
-    { name: "skerry-language" },
-  ),
+    { name: "skerry-language" }
+  )
 );
 
 export function useT() {
-  const language = useLanguageStore((s) => s.language);
+  const language = useLanguageStore(s => s.language);
   return (key: TranslationKey) => translations[language][key] ?? key;
 }

@@ -2,8 +2,16 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  X, Zap, CheckCircle2, Loader2, AlertCircle, ChevronRight,
-  Users, Building2, TrendingUp, Lock
+  X,
+  Zap,
+  CheckCircle2,
+  Loader2,
+  AlertCircle,
+  ChevronRight,
+  Users,
+  Building2,
+  TrendingUp,
+  Lock,
 } from "lucide-react";
 import { useResearchStore, TIER_CONFIGS } from "@/store/researchStore";
 import { useAccountTierStore, AccountTier } from "@/store/accountTierStore";
@@ -25,14 +33,21 @@ interface FindLeadsModalProps {
 
 export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
   const navigate = useNavigate();
-  const tier = useAccountTierStore((s) => s.tier);
-  const { status, steps, leadsFoundCount, startResearch, reset, setLeadsFoundCount } = useResearchStore();
-  const addLeads = useLeadStore((s) => s.addLeads);
-  const canStartRun = useUsageStore((s) => s.canStartRun);
-  const getTierUsage = useUsageStore((s) => s.getTierUsage);
-  const setRunsUsedFromServer = useUsageStore((s) => s.setRunsUsedFromServer);
-  const estimateRunCostUsd = useUsageStore((s) => s.estimateRunCostUsd);
-  const recordResearchRun = useUsageStore((s) => s.recordResearchRun);
+  const tier = useAccountTierStore(s => s.tier);
+  const {
+    status,
+    steps,
+    leadsFoundCount,
+    startResearch,
+    reset,
+    setLeadsFoundCount,
+  } = useResearchStore();
+  const addLeads = useLeadStore(s => s.addLeads);
+  const canStartRun = useUsageStore(s => s.canStartRun);
+  const getTierUsage = useUsageStore(s => s.getTierUsage);
+  const setRunsUsedFromServer = useUsageStore(s => s.setRunsUsedFromServer);
+  const estimateRunCostUsd = useUsageStore(s => s.estimateRunCostUsd);
+  const recordResearchRun = useUsageStore(s => s.recordResearchRun);
   const config = TIER_CONFIGS[tier];
   const tierUsage = getTierUsage(tier);
 
@@ -65,7 +80,11 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
     if (!open) return;
     void (async () => {
       const usage = await getEntitlementUsage();
-      if (usage.ok && usage.tier === tier && typeof usage.runsUsed === "number") {
+      if (
+        usage.ok &&
+        usage.tier === tier &&
+        typeof usage.runsUsed === "number"
+      ) {
         setRunsUsedFromServer(tier, usage.runsUsed);
       }
     })();
@@ -130,8 +149,9 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
     onClose();
   };
 
-  const completedSteps = steps.filter((s) => s.status === "done").length;
-  const progressPct = steps.length > 0 ? (completedSteps / steps.length) * 100 : 0;
+  const completedSteps = steps.filter(s => s.status === "done").length;
+  const progressPct =
+    steps.length > 0 ? (completedSteps / steps.length) * 100 : 0;
 
   const tierColors: Record<AccountTier, string> = {
     solo: "from-slate-500 to-slate-400",
@@ -147,7 +167,11 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
 
   const usagePct = Math.round((tierUsage.runsUsed / config.monthlyLimit) * 100);
   const runGuard = canStartRun(tier);
-  const estimatedRunCost = estimateRunCostUsd(tier, config.maxLeadsPerRun, true);
+  const estimatedRunCost = estimateRunCostUsd(
+    tier,
+    config.maxLeadsPerRun,
+    true
+  );
 
   return (
     <AnimatePresence>
@@ -174,12 +198,18 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
               {/* Header */}
               <div className="flex items-center justify-between border-b border-white/5 px-6 py-4">
                 <div className="flex items-center gap-3">
-                  <div className={`flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br ${tierColors[tier]}`}>
+                  <div
+                    className={`flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br ${tierColors[tier]}`}
+                  >
                     <Zap className="h-4 w-4 text-white" strokeWidth={2.5} />
                   </div>
                   <div>
-                    <h2 className="text-sm font-semibold text-foreground">Find New Leads</h2>
-                    <p className="text-[11px] text-muted-foreground">{config.label}</p>
+                    <h2 className="text-sm font-semibold text-foreground">
+                      Find New Leads
+                    </h2>
+                    <p className="text-[11px] text-muted-foreground">
+                      {config.label}
+                    </p>
                   </div>
                 </div>
                 {phase !== "running" && (
@@ -195,22 +225,39 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
               <div className="p-6">
                 {/* PHASE: Confirm */}
                 {phase === "confirm" && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5">
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="space-y-5"
+                  >
                     {/* Tier info */}
-                    <div className={`rounded-xl border px-4 py-3 ${tierBadgeColors[tier]}`}>
+                    <div
+                      className={`rounded-xl border px-4 py-3 ${tierBadgeColors[tier]}`}
+                    >
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-semibold uppercase tracking-wider">{tier} Plan — {config.label}</span>
-                        <span className="text-[11px]">{config.maxLeadsPerRun} leads/run</span>
+                        <span className="text-xs font-semibold uppercase tracking-wider">
+                          {tier} Plan — {config.label}
+                        </span>
+                        <span className="text-[11px]">
+                          {config.maxLeadsPerRun} leads/run
+                        </span>
                       </div>
-                      <p className="mt-1 text-[11px] opacity-80">{config.description}</p>
+                      <p className="mt-1 text-[11px] opacity-80">
+                        {config.description}
+                      </p>
                     </div>
 
                     {/* Research steps preview */}
                     <div>
-                      <p className="mb-2 text-[11px] uppercase tracking-wider text-muted-foreground">Research Pipeline</p>
+                      <p className="mb-2 text-[11px] uppercase tracking-wider text-muted-foreground">
+                        Research Pipeline
+                      </p>
                       <div className="space-y-1.5">
                         {config.steps.map((step, i) => (
-                          <div key={i} className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <div
+                            key={i}
+                            className="flex items-center gap-2 text-xs text-muted-foreground"
+                          >
                             <ChevronRight className="h-3 w-3 text-cyan-500/50" />
                             {step}
                           </div>
@@ -221,8 +268,12 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
                     {/* Monthly usage */}
                     <div>
                       <div className="mb-1.5 flex items-center justify-between text-[11px]">
-                        <span className="text-muted-foreground">Monthly Usage</span>
-                        <span className="text-foreground">{tierUsage.runsUsed} / {config.monthlyLimit} runs</span>
+                        <span className="text-muted-foreground">
+                          Monthly Usage
+                        </span>
+                        <span className="text-foreground">
+                          {tierUsage.runsUsed} / {config.monthlyLimit} runs
+                        </span>
                       </div>
                       <Progress value={usagePct} className="h-1.5" />
                       {usagePct > 80 && (
@@ -231,21 +282,29 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
                         </p>
                       )}
                       <p className="mt-1 text-[11px] text-muted-foreground">
-                        Estimated spend this month: ${tierUsage.estimatedSpendUsd.toFixed(2)}
+                        Estimated spend this month: $
+                        {tierUsage.estimatedSpendUsd.toFixed(2)}
                       </p>
                     </div>
 
                     {/* Business context */}
                     {profile && (
                       <div className="rounded-lg bg-white/5 px-3 py-2.5 text-xs">
-                        <p className="text-muted-foreground mb-1">Using your business context:</p>
-                        <p className="text-foreground line-clamp-2">{profile.businessDescription ?? "Not set"}</p>
+                        <p className="text-muted-foreground mb-1">
+                          Using your business context:
+                        </p>
+                        <p className="text-foreground line-clamp-2">
+                          {profile.businessDescription ?? "Not set"}
+                        </p>
                       </div>
                     )}
 
                     <div className="flex items-start gap-2 rounded-lg bg-cyan-500/10 border border-cyan-500/20 px-3 py-2.5 text-xs text-cyan-300">
                       <Lock className="h-3.5 w-3.5 mt-0.5 flex-shrink-0" />
-                      <span>Lead generation runs server-side with protected keys and authenticated access.</span>
+                      <span>
+                        Lead generation runs server-side with protected keys and
+                        authenticated access.
+                      </span>
                     </div>
 
                     <Button
@@ -268,11 +327,17 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
 
                 {/* PHASE: Running */}
                 {phase === "running" && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5">
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="space-y-5"
+                  >
                     <div className="flex items-center gap-3">
                       <Loader2 className="h-5 w-5 animate-spin text-cyan-400" />
                       <div>
-                        <p className="text-sm font-medium text-foreground">Research in progress…</p>
+                        <p className="text-sm font-medium text-foreground">
+                          Research in progress…
+                        </p>
                         <p className="text-[11px] text-muted-foreground">
                           {completedSteps} of {steps.length} steps complete
                         </p>
@@ -282,7 +347,7 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
                     <Progress value={progressPct} className="h-1.5" />
 
                     <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
-                      {steps.map((step) => (
+                      {steps.map(step => (
                         <motion.div
                           key={step.id}
                           initial={{ opacity: 0, x: -8 }}
@@ -305,11 +370,19 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
                             )}
                           </div>
                           <div className="flex-1">
-                            <span className={step.status === "running" ? "text-cyan-300" : "text-foreground/80"}>
+                            <span
+                              className={
+                                step.status === "running"
+                                  ? "text-cyan-300"
+                                  : "text-foreground/80"
+                              }
+                            >
                               {step.label}
                             </span>
                             {step.detail && (
-                              <span className="ml-2 text-muted-foreground">{step.detail}</span>
+                              <span className="ml-2 text-muted-foreground">
+                                {step.detail}
+                              </span>
                             )}
                           </div>
                         </motion.div>
@@ -329,7 +402,9 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
                       <CheckCircle2 className="h-8 w-8 text-emerald-400" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-foreground">Research Complete</h3>
+                      <h3 className="text-xl font-semibold text-foreground">
+                        Research Complete
+                      </h3>
                       <p className="mt-1 text-sm text-muted-foreground">
                         {leadsFoundCount} new leads added to your pipeline
                       </p>
@@ -337,14 +412,38 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
 
                     <div className="grid grid-cols-3 gap-3">
                       {[
-                        { icon: Users, label: "Leads Found", value: String(leadsFoundCount) },
-                        { icon: Building2, label: "Companies", value: String(leadsFoundCount) },
-                        { icon: TrendingUp, label: "Avg. Fit Score", value: tier === "agency" ? "87%" : tier === "team" ? "74%" : "61%" },
-                      ].map((stat) => (
-                        <div key={stat.label} className="rounded-lg bg-white/5 px-3 py-3">
+                        {
+                          icon: Users,
+                          label: "Leads Found",
+                          value: String(leadsFoundCount),
+                        },
+                        {
+                          icon: Building2,
+                          label: "Companies",
+                          value: String(leadsFoundCount),
+                        },
+                        {
+                          icon: TrendingUp,
+                          label: "Avg. Fit Score",
+                          value:
+                            tier === "agency"
+                              ? "87%"
+                              : tier === "team"
+                                ? "74%"
+                                : "61%",
+                        },
+                      ].map(stat => (
+                        <div
+                          key={stat.label}
+                          className="rounded-lg bg-white/5 px-3 py-3"
+                        >
                           <stat.icon className="mx-auto mb-1 h-4 w-4 text-cyan-400" />
-                          <p className="text-base font-bold text-foreground">{stat.value}</p>
-                          <p className="text-[10px] text-muted-foreground">{stat.label}</p>
+                          <p className="text-base font-bold text-foreground">
+                            {stat.value}
+                          </p>
+                          <p className="text-[10px] text-muted-foreground">
+                            {stat.label}
+                          </p>
                         </div>
                       ))}
                     </div>

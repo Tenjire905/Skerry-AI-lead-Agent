@@ -8,131 +8,144 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as BillingRouteImport } from './routes/billing'
-import { Route as WorkspaceRouteImport } from './routes/workspace'
-import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as InsightRouteImport } from './routes/insight'
-import { Route as ForgeRouteImport } from './routes/forge'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as rootRouteImport } from "./routes/__root";
+import { Route as BillingRouteImport } from "./routes/billing";
+import { Route as WorkspaceRouteImport } from "./routes/workspace";
+import { Route as SettingsRouteImport } from "./routes/settings";
+import { Route as InsightRouteImport } from "./routes/insight";
+import { Route as ForgeRouteImport } from "./routes/forge";
+import { Route as IndexRouteImport } from "./routes/index";
 
 const BillingRoute = BillingRouteImport.update({
-  id: '/billing',
-  path: '/billing',
+  id: "/billing",
+  path: "/billing",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const WorkspaceRoute = WorkspaceRouteImport.update({
-  id: '/workspace',
-  path: '/workspace',
+  id: "/workspace",
+  path: "/workspace",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const SettingsRoute = SettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
+  id: "/settings",
+  path: "/settings",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const InsightRoute = InsightRouteImport.update({
-  id: '/insight',
-  path: '/insight',
+  id: "/insight",
+  path: "/insight",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ForgeRoute = ForgeRouteImport.update({
-  id: '/forge',
-  path: '/forge',
+  id: "/forge",
+  path: "/forge",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/billing': typeof BillingRoute
-  '/forge': typeof ForgeRoute
-  '/insight': typeof InsightRoute
-  '/settings': typeof SettingsRoute
-  '/workspace': typeof WorkspaceRoute
+  "/": typeof IndexRoute;
+  "/billing": typeof BillingRoute;
+  "/forge": typeof ForgeRoute;
+  "/insight": typeof InsightRoute;
+  "/settings": typeof SettingsRoute;
+  "/workspace": typeof WorkspaceRoute;
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/billing': typeof BillingRoute
-  '/forge': typeof ForgeRoute
-  '/insight': typeof InsightRoute
-  '/settings': typeof SettingsRoute
-  '/workspace': typeof WorkspaceRoute
+  "/": typeof IndexRoute;
+  "/billing": typeof BillingRoute;
+  "/forge": typeof ForgeRoute;
+  "/insight": typeof InsightRoute;
+  "/settings": typeof SettingsRoute;
+  "/workspace": typeof WorkspaceRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/billing': typeof BillingRoute
-  '/forge': typeof ForgeRoute
-  '/insight': typeof InsightRoute
-  '/settings': typeof SettingsRoute
-  '/workspace': typeof WorkspaceRoute
+  __root__: typeof rootRouteImport;
+  "/": typeof IndexRoute;
+  "/billing": typeof BillingRoute;
+  "/forge": typeof ForgeRoute;
+  "/insight": typeof InsightRoute;
+  "/settings": typeof SettingsRoute;
+  "/workspace": typeof WorkspaceRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/billing' | '/forge' | '/insight' | '/settings' | '/workspace'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/billing' | '/forge' | '/insight' | '/settings' | '/workspace'
-  id: '__root__' | '/' | '/billing' | '/forge' | '/insight' | '/settings' | '/workspace'
-  fileRoutesById: FileRoutesById
+  fileRoutesByFullPath: FileRoutesByFullPath;
+  fullPaths:
+    | "/"
+    | "/billing"
+    | "/forge"
+    | "/insight"
+    | "/settings"
+    | "/workspace";
+  fileRoutesByTo: FileRoutesByTo;
+  to: "/" | "/billing" | "/forge" | "/insight" | "/settings" | "/workspace";
+  id:
+    | "__root__"
+    | "/"
+    | "/billing"
+    | "/forge"
+    | "/insight"
+    | "/settings"
+    | "/workspace";
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  BillingRoute: typeof BillingRoute
-  ForgeRoute: typeof ForgeRoute
-  InsightRoute: typeof InsightRoute
-  SettingsRoute: typeof SettingsRoute
-  WorkspaceRoute: typeof WorkspaceRoute
+  IndexRoute: typeof IndexRoute;
+  BillingRoute: typeof BillingRoute;
+  ForgeRoute: typeof ForgeRoute;
+  InsightRoute: typeof InsightRoute;
+  SettingsRoute: typeof SettingsRoute;
+  WorkspaceRoute: typeof WorkspaceRoute;
 }
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/billing': {
-      id: '/billing'
-      path: '/billing'
-      fullPath: '/billing'
-      preLoaderRoute: typeof BillingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/workspace': {
-      id: '/workspace'
-      path: '/workspace'
-      fullPath: '/workspace'
-      preLoaderRoute: typeof WorkspaceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/insight': {
-      id: '/insight'
-      path: '/insight'
-      fullPath: '/insight'
-      preLoaderRoute: typeof InsightRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/forge': {
-      id: '/forge'
-      path: '/forge'
-      fullPath: '/forge'
-      preLoaderRoute: typeof ForgeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+    "/billing": {
+      id: "/billing";
+      path: "/billing";
+      fullPath: "/billing";
+      preLoaderRoute: typeof BillingRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/workspace": {
+      id: "/workspace";
+      path: "/workspace";
+      fullPath: "/workspace";
+      preLoaderRoute: typeof WorkspaceRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/settings": {
+      id: "/settings";
+      path: "/settings";
+      fullPath: "/settings";
+      preLoaderRoute: typeof SettingsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/insight": {
+      id: "/insight";
+      path: "/insight";
+      fullPath: "/insight";
+      preLoaderRoute: typeof InsightRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/forge": {
+      id: "/forge";
+      path: "/forge";
+      fullPath: "/forge";
+      preLoaderRoute: typeof ForgeRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/": {
+      id: "/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof IndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
   }
 }
 
@@ -143,16 +156,16 @@ const rootRouteChildren: RootRouteChildren = {
   InsightRoute: InsightRoute,
   SettingsRoute: SettingsRoute,
   WorkspaceRoute: WorkspaceRoute,
-}
+};
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
+import type { getRouter } from "./router.tsx";
+import type { createStart } from "@tanstack/react-start";
+declare module "@tanstack/react-start" {
   interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
+    ssr: true;
+    router: Awaited<ReturnType<typeof getRouter>>;
   }
 }

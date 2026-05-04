@@ -76,8 +76,8 @@ server/          Express scaffolding for future API proxy (production keys)
 - **`useResearchStore`** — research run state (steps, status, count).
   `usedThisMonth` starts at 0. Resets on modal close.
 - **`useAuthStore`** — auth + user role. Demo accounts for solo/team/agency
-  + developer role with elevated access. **No `apiKeys` here** (moved to
-  env). API key surface is developer-only.
+  - developer role with elevated access. **No `apiKeys` here** (moved to
+    env). API key surface is developer-only.
 - **`useAccountTierStore`** — current tier (Solo/Team/Agency).
 - **`useLanguageStore`** — UI language (en/de).
 
@@ -222,7 +222,7 @@ Client uses `VITE_API_BASE=http://localhost:3001` (or same-origin in prod).
 
 ## 9 · Test credentials (demo)
 
-- Solo:    solo@skerry.io / solo123
-- Team:    team@skerry.io / team123
-- Agency:  agency@skerry.io / agency123
-- Developer: dev@skerry.io / skerry-dev-2024  (has key panel, onboarding reset)
+- Solo: solo@skerry.io / solo123
+- Team: team@skerry.io / team123
+- Agency: agency@skerry.io / agency123
+- Developer: dev@skerry.io / skerry-dev-2024 (has key panel, onboarding reset)

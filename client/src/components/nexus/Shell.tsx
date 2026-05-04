@@ -25,14 +25,14 @@ export function Shell() {
   const t = useT();
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showFindLeads, setShowFindLeads] = useState(false);
-  const tier = useAccountTierStore((s) => s.tier);
-  const setTier = useAccountTierStore((s) => s.setTier);
-  const initializeTier = useAccountTierStore((s) => s.initializeFromLocalStorage);
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  const isHydrating = useAuthStore((s) => s.isHydrating);
-  const user = useAuthStore((s) => s.user);
-  const logout = useAuthStore((s) => s.logout);
-  const hydrateSession = useAuthStore((s) => s.hydrateSession);
+  const tier = useAccountTierStore(s => s.tier);
+  const setTier = useAccountTierStore(s => s.setTier);
+  const initializeTier = useAccountTierStore(s => s.initializeFromLocalStorage);
+  const isAuthenticated = useAuthStore(s => s.isAuthenticated);
+  const isHydrating = useAuthStore(s => s.isHydrating);
+  const user = useAuthStore(s => s.user);
+  const logout = useAuthStore(s => s.logout);
+  const hydrateSession = useAuthStore(s => s.hydrateSession);
 
   useEffect(() => {
     void hydrateSession();
@@ -79,7 +79,12 @@ export function Shell() {
   };
 
   const initials = user?.name
-    ? user.name.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2)
+    ? user.name
+        .split(" ")
+        .map((n: string) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2)
     : "U";
 
   return (
@@ -93,8 +98,12 @@ export function Shell() {
               <SidebarTrigger className="text-muted-foreground hover:text-foreground" />
               <div className="hidden h-6 w-px bg-white/10 md:block" />
               <div className="hidden flex-col leading-none md:flex">
-                <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">{t("shell.eyebrow")}</span>
-                <span className="text-xs font-medium text-foreground/90">{t("shell.title")}</span>
+                <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                  {t("shell.eyebrow")}
+                </span>
+                <span className="text-xs font-medium text-foreground/90">
+                  {t("shell.title")}
+                </span>
               </div>
             </div>
             <div className="flex items-center gap-4">
@@ -118,13 +127,21 @@ export function Shell() {
                 <DropdownMenuTrigger asChild>
                   <button className="flex items-center gap-2 pl-2 border-l border-white/10 hover:opacity-80 transition">
                     <div className="hidden flex-col items-end leading-none sm:flex">
-                      <span className="text-[10px] font-medium text-foreground">{user?.name ?? "User"}</span>
+                      <span className="text-[10px] font-medium text-foreground">
+                        {user?.name ?? "User"}
+                      </span>
                       <div className="flex items-center gap-1 mt-0.5">
-                        <Badge variant="outline" className={`h-4 px-1 text-[8px] uppercase tracking-wider ${tierColors[tier] ?? tierColors.solo}`}>
+                        <Badge
+                          variant="outline"
+                          className={`h-4 px-1 text-[8px] uppercase tracking-wider ${tierColors[tier] ?? tierColors.solo}`}
+                        >
                           {tier}
                         </Badge>
                         {user?.role === "developer" && (
-                          <Badge variant="outline" className="h-4 px-1 text-[8px] uppercase tracking-wider border-purple-500/30 text-purple-400 bg-purple-500/5">
+                          <Badge
+                            variant="outline"
+                            className="h-4 px-1 text-[8px] uppercase tracking-wider border-purple-500/30 text-purple-400 bg-purple-500/5"
+                          >
                             dev
                           </Badge>
                         )}
@@ -137,10 +154,17 @@ export function Shell() {
                     </Avatar>
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48 bg-[#0a1628] border-white/10">
+                <DropdownMenuContent
+                  align="end"
+                  className="w-48 bg-[#0a1628] border-white/10"
+                >
                   <div className="px-2 py-1.5">
-                    <p className="text-xs font-medium text-foreground">{user?.name}</p>
-                    <p className="text-[11px] text-muted-foreground">{user?.email}</p>
+                    <p className="text-xs font-medium text-foreground">
+                      {user?.name}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground">
+                      {user?.email}
+                    </p>
                   </div>
                   <DropdownMenuSeparator className="bg-white/5" />
                   {user?.role === "developer" && (
@@ -179,7 +203,10 @@ export function Shell() {
         </div>
       </div>
       <Toaster />
-      <FindLeadsModal open={showFindLeads} onClose={() => setShowFindLeads(false)} />
+      <FindLeadsModal
+        open={showFindLeads}
+        onClose={() => setShowFindLeads(false)}
+      />
     </SidebarProvider>
   );
 }

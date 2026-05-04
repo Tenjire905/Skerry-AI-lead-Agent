@@ -43,6 +43,7 @@ interface HealthResponse {
 interface AuthResponse {
   ok: boolean;
   user?: AuthUser;
+  csrfToken?: string;
   error?: string;
 }
 
@@ -91,13 +92,7 @@ interface GenerateEmailResponse {
 }
 
 async function apiPost<T>(path: string, body: unknown): Promise<T> {
-  const resp = await fetch(`${API_BASE}${path}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-    body: JSON.stringify(body),
-  });
-  return resp.json() as Promise<T>;
+  return apiPostWithCsrf<T>(path, body);
 }
 
 async function apiGet<T>(path: string): Promise<T> {
@@ -105,11 +100,82 @@ async function apiGet<T>(path: string): Promise<T> {
   return resp.json() as Promise<T>;
 }
 
+let csrfTokenCache: string | null = null;
+
+function isCsrfFailure(payload: unknown): boolean {
+  if (typeof payload !== "object" || payload === null) return false;
+  const maybeError = (payload as { error?: unknown }).error;
+  return (
+    typeof maybeError === "string" && maybeError.toLowerCase().includes("csrf")
+  );
+}
+
+async function refreshCsrfToken(): Promise<string | null> {
+  const resp = await fetch(`${API_BASE}/api/auth/csrf`, {
+    credentials: "include",
+  });
+  const json = (await resp.json()) as { ok?: boolean; csrfToken?: string };
+  if (!resp.ok || !json.ok || !json.csrfToken) {
+    csrfTokenCache = null;
+    return null;
+  }
+  csrfTokenCache = json.csrfToken;
+  return csrfTokenCache;
+}
+
+async function apiPostWithCsrf<T>(path: string, body: unknown): Promise<T> {
+  if (!csrfTokenCache && path !== "/api/auth/login") {
+    await refreshCsrfToken();
+  }
+  const requestHeaders: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  if (csrfTokenCache) {
+    requestHeaders["X-CSRF-Token"] = csrfTokenCache;
+  }
+
+  let resp = await fetch(`${API_BASE}${path}`, {
+    method: "POST",
+    headers: requestHeaders,
+    credentials: "include",
+    body: JSON.stringify(body),
+  });
+  let json = (await resp.json()) as T;
+
+  if (
+    resp.status === 403 &&
+    isCsrfFailure(json) &&
+    path !== "/api/auth/login"
+  ) {
+    const fresh = await refreshCsrfToken();
+    if (fresh) {
+      resp = await fetch(`${API_BASE}${path}`, {
+        method: "POST",
+        headers: { ...requestHeaders, "X-CSRF-Token": fresh },
+        credentials: "include",
+        body: JSON.stringify(body),
+      });
+      json = (await resp.json()) as T;
+    }
+  }
+
+  const maybeCsrf = json as { csrfToken?: string };
+  if (maybeCsrf.csrfToken) {
+    csrfTokenCache = maybeCsrf.csrfToken;
+  }
+  return json;
+}
+
 export async function verifyEmail(email: string): Promise<VerifyResponse> {
   try {
     return await apiPost<VerifyResponse>("/api/email/verify", { email });
   } catch (err) {
-    return { ok: false, valid: false, status: "network_error", error: String(err) };
+    return {
+      ok: false,
+      valid: false,
+      status: "network_error",
+      error: String(err),
+    };
   }
 }
 
@@ -133,9 +199,17 @@ export async function serverHealth(): Promise<HealthResponse | null> {
   }
 }
 
-export async function authLogin(email: string, password: string): Promise<AuthResponse> {
+export async function authLogin(
+  email: string,
+  password: string
+): Promise<AuthResponse> {
   try {
-    return await apiPost<AuthResponse>("/api/auth/login", { email, password });
+    const response = await apiPost<AuthResponse>("/api/auth/login", {
+      email,
+      password,
+    });
+    if (response.csrfToken) csrfTokenCache = response.csrfToken;
+    return response;
   } catch (err) {
     return { ok: false, error: String(err) };
   }
@@ -143,7 +217,9 @@ export async function authLogin(email: string, password: string): Promise<AuthRe
 
 export async function authSession(): Promise<AuthResponse> {
   try {
-    return await apiGet<AuthResponse>("/api/auth/session");
+    const response = await apiGet<AuthResponse>("/api/auth/session");
+    if (response.csrfToken) csrfTokenCache = response.csrfToken;
+    return response;
   } catch (err) {
     return { ok: false, error: String(err) };
   }
@@ -151,8 +227,11 @@ export async function authSession(): Promise<AuthResponse> {
 
 export async function authLogout(): Promise<{ ok: boolean }> {
   try {
-    return await apiPost<{ ok: boolean }>("/api/auth/logout", {});
+    const response = await apiPost<{ ok: boolean }>("/api/auth/logout", {});
+    csrfTokenCache = null;
+    return response;
   } catch {
+    csrfTokenCache = null;
     return { ok: false };
   }
 }
@@ -169,9 +248,12 @@ export async function authorizeResearchStart(
   requestedLeads: number
 ): Promise<EntitlementUsageResponse> {
   try {
-    return await apiPost<EntitlementUsageResponse>("/api/entitlements/research/start", {
-      requestedLeads,
-    });
+    return await apiPost<EntitlementUsageResponse>(
+      "/api/entitlements/research/start",
+      {
+        requestedLeads,
+      }
+    );
   } catch (err) {
     return { ok: false, error: String(err) };
   }

@@ -9,8 +9,8 @@ function BillingPage() {
     <div className="mx-auto max-w-4xl p-8">
       <h1 className="mb-6 text-4xl font-bold">Billing &amp; Plans</h1>
       <p className="mb-8 text-white/70">
-        Hier kommt spaeter das komplette Billing-Dashboard mit aktuellen Preisen, Nutzungsstatistiken
-        und Stripe Checkout.
+        Hier kommt spaeter das komplette Billing-Dashboard mit aktuellen
+        Preisen, Nutzungsstatistiken und Stripe Checkout.
       </p>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">

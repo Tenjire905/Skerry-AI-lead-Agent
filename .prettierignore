@@ -1,5 +1,6 @@
 dist
 node_modules
 .git
+Skerry AI Agent
 *.min.js
 *.min.css

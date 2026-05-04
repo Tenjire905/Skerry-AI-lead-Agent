@@ -35,7 +35,9 @@ export function ThemeProvider({
   });
   const [theme, setTheme] = useState<Theme>(() => {
     if (mode === "system") {
-      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      return window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
     }
     return mode;
   });
@@ -70,7 +72,7 @@ export function ThemeProvider({
 
   const toggleTheme = switchable
     ? () => {
-        setMode((prev) => {
+        setMode(prev => {
           if (prev === "light") return "dark";
           if (prev === "dark") return "light";
           return "dark";
@@ -79,7 +81,9 @@ export function ThemeProvider({
     : undefined;
 
   return (
-    <ThemeContext.Provider value={{ theme, mode, setMode, toggleTheme, switchable }}>
+    <ThemeContext.Provider
+      value={{ theme, mode, setMode, toggleTheme, switchable }}
+    >
       {children}
     </ThemeContext.Provider>
   );

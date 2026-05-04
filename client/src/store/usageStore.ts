@@ -15,8 +15,16 @@ interface UsageStore {
   ensureCurrentMonth: () => void;
   getTierUsage: (tier: AccountTier) => TierUsage;
   setRunsUsedFromServer: (tier: AccountTier, runsUsed: number) => void;
-  canStartRun: (tier: AccountTier) => { allowed: boolean; reason?: string; runsRemaining: number };
-  estimateRunCostUsd: (tier: AccountTier, requestedLeads: number, aiEnabled: boolean) => number;
+  canStartRun: (tier: AccountTier) => {
+    allowed: boolean;
+    reason?: string;
+    runsRemaining: number;
+  };
+  estimateRunCostUsd: (
+    tier: AccountTier,
+    requestedLeads: number,
+    aiEnabled: boolean
+  ) => number;
   recordResearchRun: (params: {
     tier: AccountTier;
     generatedLeads: number;
@@ -69,14 +77,14 @@ export const useUsageStore = create<UsageStore>()(
         set({ usageMonth: month, usageByTier: createEmptyUsageByTier() });
       },
 
-      getTierUsage: (tier) => {
+      getTierUsage: tier => {
         get().ensureCurrentMonth();
         return get().usageByTier[tier];
       },
 
       setRunsUsedFromServer: (tier, runsUsed) => {
         get().ensureCurrentMonth();
-        set((state) => ({
+        set(state => ({
           usageByTier: {
             ...state.usageByTier,
             [tier]: {
@@ -87,10 +95,13 @@ export const useUsageStore = create<UsageStore>()(
         }));
       },
 
-      canStartRun: (tier) => {
+      canStartRun: tier => {
         get().ensureCurrentMonth();
         const runsUsed = get().usageByTier[tier].runsUsed;
-        const runsRemaining = Math.max(TIER_CONFIGS[tier].monthlyLimit - runsUsed, 0);
+        const runsRemaining = Math.max(
+          TIER_CONFIGS[tier].monthlyLimit - runsUsed,
+          0
+        );
         if (runsRemaining <= 0) {
           return {
             allowed: false,
@@ -104,12 +115,17 @@ export const useUsageStore = create<UsageStore>()(
       estimateRunCostUsd: (tier, requestedLeads, aiEnabled) => {
         if (!aiEnabled) return 0;
         const boundedCount = Math.max(requestedLeads, 1);
-        return Number((TIER_BASE_COST_USD[tier] + boundedCount * COST_PER_LEAD_USD[tier]).toFixed(4));
+        return Number(
+          (
+            TIER_BASE_COST_USD[tier] +
+            boundedCount * COST_PER_LEAD_USD[tier]
+          ).toFixed(4)
+        );
       },
 
       recordResearchRun: ({ tier, generatedLeads, requestedLeads, usedAi }) => {
         get().ensureCurrentMonth();
-        set((state) => {
+        set(state => {
           const prev = state.usageByTier[tier];
           const estimatedRunCost = usedAi
             ? get().estimateRunCostUsd(tier, requestedLeads, true)
@@ -118,9 +134,12 @@ export const useUsageStore = create<UsageStore>()(
             usageByTier: {
               ...state.usageByTier,
               [tier]: {
-                runsUsed: prev.runsUsed + 1,
-                leadsGenerated: prev.leadsGenerated + Math.max(generatedLeads, 0),
-                estimatedSpendUsd: Number((prev.estimatedSpendUsd + estimatedRunCost).toFixed(4)),
+                runsUsed: prev.runsUsed,
+                leadsGenerated:
+                  prev.leadsGenerated + Math.max(generatedLeads, 0),
+                estimatedSpendUsd: Number(
+                  (prev.estimatedSpendUsd + estimatedRunCost).toFixed(4)
+                ),
               },
             },
           };
@@ -128,12 +147,15 @@ export const useUsageStore = create<UsageStore>()(
       },
 
       resetAllUsage: () => {
-        set({ usageMonth: currentMonthKey(), usageByTier: createEmptyUsageByTier() });
+        set({
+          usageMonth: currentMonthKey(),
+          usageByTier: createEmptyUsageByTier(),
+        });
       },
     }),
     {
       name: "skerry-usage",
-      partialize: (s) => ({
+      partialize: s => ({
         usageMonth: s.usageMonth,
         usageByTier: s.usageByTier,
       }),

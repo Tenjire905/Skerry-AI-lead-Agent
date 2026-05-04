@@ -8,9 +8,9 @@ interface AccountTierStore {
   initializeFromLocalStorage: () => void;
 }
 
-export const useAccountTierStore = create<AccountTierStore>((set) => ({
+export const useAccountTierStore = create<AccountTierStore>(set => ({
   tier: "solo",
-  setTier: (tier) => {
+  setTier: tier => {
     set({ tier });
     localStorage.setItem("skerry-account-tier", tier);
   },

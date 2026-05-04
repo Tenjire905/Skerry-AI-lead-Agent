@@ -2,7 +2,15 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
-import { Send, Loader2, CheckCircle2, AlertTriangle, Variable, Copy, Sparkles } from "lucide-react";
+import {
+  Send,
+  Loader2,
+  CheckCircle2,
+  AlertTriangle,
+  Variable,
+  Copy,
+  Sparkles,
+} from "lucide-react";
 import { useLeadStore, type Lead } from "@/store/leadStore";
 import { useAuthStore } from "@/store/authStore";
 import { generateEmailServer, sendEmail } from "@/lib/skerryApi";
@@ -13,9 +21,15 @@ export const Route = createFileRoute("/forge")({
   head: () => ({
     meta: [
       { title: "Forge — Skerry" },
-      { name: "description", content: "Email forge: variables, preview, and Instantly.ai dispatch." },
+      {
+        name: "description",
+        content: "Email forge: variables, preview, and Instantly.ai dispatch.",
+      },
       { property: "og:title", content: "Forge — Skerry" },
-      { property: "og:description", content: "Compose and dispatch personalized emails." },
+      {
+        property: "og:description",
+        content: "Compose and dispatch personalized emails.",
+      },
     ],
   }),
   component: ForgePage,
@@ -39,7 +53,7 @@ type Status = "idle" | "sending" | "sent" | "error";
 
 function ForgePage() {
   const { leads, pushToInstantly, updateLeadEmail } = useLeadStore();
-  const user = useAuthStore((s) => s.user);
+  const user = useAuthStore(s => s.user);
 
   const [localSelectedId, setLocalSelectedId] = useState(leads[0]?.id ?? "");
   const [status, setStatus] = useState<Status>("idle");
@@ -47,7 +61,7 @@ function ForgePage() {
   const [editedMd, setEditedMd] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const lead = leads.find((l) => l.id === localSelectedId) ?? leads[0];
+  const lead = leads.find(l => l.id === localSelectedId) ?? leads[0];
   const vars = useMemo(() => buildVars(lead), [lead]);
   const t = useT();
 
@@ -101,7 +115,9 @@ function ForgePage() {
         try {
           const raw = localStorage.getItem("skerry-onboarding-profile");
           return raw ? JSON.parse(raw) : null;
-        } catch { return null; }
+        } catch {
+          return null;
+        }
       })();
       const generated = await generateEmailServer({
         lead: {
@@ -148,20 +164,30 @@ function ForgePage() {
     <div className="space-y-8">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
-          <span className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground">{t("forge.eyebrow")}</span>
+          <span className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+            {t("forge.eyebrow")}
+          </span>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight">
-            {t("forge.titleA")} <span className="text-gradient-cyber">{t("forge.titleB")}</span>
+            {t("forge.titleA")}{" "}
+            <span className="text-gradient-cyber">{t("forge.titleB")}</span>
           </h1>
-          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{t("forge.subtitle")}</p>
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+            {t("forge.subtitle")}
+          </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          {leads.slice(0, 8).map((l) => {
+          {leads.slice(0, 8).map(l => {
             const active = l.id === localSelectedId;
             return (
               <button
                 key={l.id}
                 onClick={() => handleSelectLead(l.id)}
-                className={"rounded-md px-3 py-1.5 text-xs ring-1 transition " + (active ? "bg-white/10 text-foreground ring-cyan-300/40" : "bg-white/5 text-muted-foreground ring-white/10 hover:text-foreground")}
+                className={
+                  "rounded-md px-3 py-1.5 text-xs ring-1 transition " +
+                  (active
+                    ? "bg-white/10 text-foreground ring-cyan-300/40"
+                    : "bg-white/5 text-muted-foreground ring-white/10 hover:text-foreground")
+                }
               >
                 {l.personal.firstName} · {l.organization.name}
               </button>
@@ -173,15 +199,27 @@ function ForgePage() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[360px_minmax(0,1fr)]">
         <aside className="rounded-xl glass p-5">
           <div className="flex items-center gap-2 text-sm font-semibold">
-            <Variable className="h-4 w-4 text-cyan-300" /> {t("forge.variables")}
+            <Variable className="h-4 w-4 text-cyan-300" />{" "}
+            {t("forge.variables")}
           </div>
           <ul className="mt-4 space-y-2">
-            {vars.map((v) => (
-              <li key={v.key} className="group flex items-center justify-between gap-3 rounded-lg bg-white/5 px-3 py-2.5 ring-1 ring-white/5">
+            {vars.map(v => (
+              <li
+                key={v.key}
+                className="group flex items-center justify-between gap-3 rounded-lg bg-white/5 px-3 py-2.5 ring-1 ring-white/5"
+              >
                 <div className="min-w-0 flex-1 overflow-hidden">
-                  <div className="truncate font-mono text-[10px] text-cyan-300/80">{v.key}</div>
+                  <div className="truncate font-mono text-[10px] text-cyan-300/80">
+                    {v.key}
+                  </div>
                   <div className="mt-0.5 truncate text-[11px] text-foreground/70">
-                    {v.value ? v.value : <span className="italic text-muted-foreground/50">empty</span>}
+                    {v.value ? (
+                      v.value
+                    ) : (
+                      <span className="italic text-muted-foreground/50">
+                        empty
+                      </span>
+                    )}
                   </div>
                 </div>
                 <button
@@ -199,9 +237,13 @@ function ForgePage() {
             className="mt-5 w-full flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-600/20 to-cyan-500/20 border border-cyan-500/20 px-3 py-2.5 text-xs font-medium text-cyan-300 hover:from-blue-600/30 hover:to-cyan-500/30 transition disabled:opacity-50"
           >
             {isGenerating ? (
-              <><Loader2 className="h-3.5 w-3.5 animate-spin" /> Generating…</>
+              <>
+                <Loader2 className="h-3.5 w-3.5 animate-spin" /> Generating…
+              </>
             ) : (
-              <><Sparkles className="h-3.5 w-3.5" /> Generate with AI</>
+              <>
+                <Sparkles className="h-3.5 w-3.5" /> Generate with AI
+              </>
             )}
           </button>
           {!lead.personal.email && (
@@ -209,7 +251,9 @@ function ForgePage() {
               <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" />
               <div className="text-xs text-amber-100/90">
                 <div className="font-medium">{t("forge.missingContact")}</div>
-                <div className="mt-0.5 text-amber-100/70">{t("forge.missingContactDesc")}</div>
+                <div className="mt-0.5 text-amber-100/70">
+                  {t("forge.missingContactDesc")}
+                </div>
               </div>
             </div>
           )}
@@ -223,7 +267,10 @@ function ForgePage() {
             </div>
             <div className="flex items-center gap-2">
               <button
-                onClick={() => { setIsEditing(!isEditing); if (!isEditing && !editedMd) setEditedMd(currentMd); }}
+                onClick={() => {
+                  setIsEditing(!isEditing);
+                  if (!isEditing && !editedMd) setEditedMd(currentMd);
+                }}
                 className="inline-flex items-center gap-1.5 rounded-md bg-white/5 px-2.5 py-1.5 text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-white/10 transition"
               >
                 {isEditing ? "Preview" : "Edit"}
@@ -235,23 +282,50 @@ function ForgePage() {
               >
                 <AnimatePresence mode="wait" initial={false}>
                   {status === "idle" && (
-                    <motion.span key="i" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-2">
+                    <motion.span
+                      key="i"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="flex items-center gap-2"
+                    >
                       <Send className="h-3.5 w-3.5" /> {t("forge.push")}
                     </motion.span>
                   )}
                   {status === "sending" && (
-                    <motion.span key="s" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-2">
-                      <Loader2 className="h-3.5 w-3.5 animate-spin" /> {t("forge.pushing")}
+                    <motion.span
+                      key="s"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="flex items-center gap-2"
+                    >
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />{" "}
+                      {t("forge.pushing")}
                     </motion.span>
                   )}
                   {status === "sent" && (
-                    <motion.span key="d" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-2">
-                      <CheckCircle2 className="h-3.5 w-3.5" /> {t("forge.injected")}
+                    <motion.span
+                      key="d"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="flex items-center gap-2"
+                    >
+                      <CheckCircle2 className="h-3.5 w-3.5" />{" "}
+                      {t("forge.injected")}
                     </motion.span>
                   )}
                   {status === "error" && (
-                    <motion.span key="e" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-2">
-                      <AlertTriangle className="h-3.5 w-3.5" /> {t("forge.missingEmail")}
+                    <motion.span
+                      key="e"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="flex items-center gap-2"
+                    >
+                      <AlertTriangle className="h-3.5 w-3.5" />{" "}
+                      {t("forge.missingEmail")}
                     </motion.span>
                   )}
                 </AnimatePresence>
@@ -261,7 +335,7 @@ function ForgePage() {
           {isEditing ? (
             <textarea
               value={editedMd || currentMd}
-              onChange={(e) => setEditedMd(e.target.value)}
+              onChange={e => setEditedMd(e.target.value)}
               className="w-full p-8 min-h-[400px] max-h-[600px] overflow-y-auto bg-white/5 border-none text-sm text-foreground/85 focus:outline-none focus:ring-0 resize-none font-mono"
             />
           ) : (

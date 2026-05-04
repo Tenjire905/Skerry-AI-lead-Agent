@@ -1,4 +1,9 @@
-export type LeadStage = "scraping" | "analyzing" | "generating" | "done" | "missing";
+export type LeadStage =
+  | "scraping"
+  | "analyzing"
+  | "generating"
+  | "done"
+  | "missing";
 
 export interface Lead {
   id: string;
@@ -16,7 +21,11 @@ export interface Lead {
   pushedToInstantly?: boolean;
 }
 
-const newsletterTemplate = (l: { firstName: string; org: string; angle: string }) => `# The Cusp — Insider Brief for ${l.firstName}
+const newsletterTemplate = (l: {
+  firstName: string;
+  org: string;
+  angle: string;
+}) => `# The Cusp — Insider Brief for ${l.firstName}
 
 **On the radar:** ${l.org}'s recent moves caught our eye.
 

@@ -8,13 +8,13 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
 export function LoginPage() {
-  const login = useAuthStore((s) => s.login);
+  const login = useAuthStore(s => s.login);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [devHint, setDevHint] = useState(false);
+  const isDev = import.meta.env.DEV;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,12 +27,6 @@ export function LoginPage() {
     } else {
       toast.success("Welcome back to Skerry");
     }
-  };
-
-  const fillDev = () => {
-    setEmail("dev@skerry.io");
-    setPassword("skerry-dev-2024");
-    setDevHint(false);
   };
 
   return (
@@ -68,7 +62,10 @@ export function LoginPage() {
         <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8 shadow-2xl backdrop-blur-xl">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+              <Label
+                htmlFor="email"
+                className="text-xs font-medium text-muted-foreground uppercase tracking-wider"
+              >
                 Email
               </Label>
               <div className="relative">
@@ -77,7 +74,7 @@ export function LoginPage() {
                   id="email"
                   type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={e => setEmail(e.target.value)}
                   placeholder="you@company.com"
                   className="pl-9 bg-white/5 border-white/10 focus:border-cyan-500/50 focus:ring-cyan-500/20"
                   required
@@ -87,7 +84,10 @@ export function LoginPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+              <Label
+                htmlFor="password"
+                className="text-xs font-medium text-muted-foreground uppercase tracking-wider"
+              >
                 Password
               </Label>
               <div className="relative">
@@ -96,7 +96,7 @@ export function LoginPage() {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••"
                   className="pl-9 pr-10 bg-white/5 border-white/10 focus:border-cyan-500/50 focus:ring-cyan-500/20"
                   required
@@ -107,7 +107,11 @@ export function LoginPage() {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition"
                 >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
                 </button>
               </div>
             </div>
@@ -128,65 +132,66 @@ export function LoginPage() {
               className="w-full h-11 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-semibold shadow-[0_0_30px_-8px_oklch(0.78_0.18_220_/_0.6)] transition-all"
             >
               {loading ? (
-                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Signing in…</>
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Signing in…
+                </>
               ) : (
                 "Sign In"
               )}
             </Button>
           </form>
 
-          {/* Demo accounts */}
-          <div className="mt-6 border-t border-white/5 pt-5">
-            <p className="mb-3 text-center text-[11px] uppercase tracking-wider text-muted-foreground">
-              Demo Accounts
-            </p>
-            <div className="grid grid-cols-3 gap-2">
-              {[
-                { label: "Solo", email: "solo@skerry.io", password: "solo123", color: "text-slate-300" },
-                { label: "Team", email: "team@skerry.io", password: "team123", color: "text-blue-300" },
-                { label: "Agency", email: "agency@skerry.io", password: "agency123", color: "text-cyan-300" },
-              ].map((acc) => (
-                <button
-                  key={acc.label}
-                  type="button"
-                  onClick={() => { setEmail(acc.email); setPassword(acc.password); }}
-                  className="rounded-lg border border-white/10 bg-white/5 px-2 py-2 text-center text-[11px] font-medium transition hover:bg-white/10"
-                >
-                  <span className={acc.color}>{acc.label}</span>
-                  <span className="block text-[10px] text-muted-foreground mt-0.5">{acc.email}</span>
-                </button>
-              ))}
+          {isDev && (
+            <div className="mt-6 border-t border-white/5 pt-5">
+              <p className="mb-3 text-center text-[11px] uppercase tracking-wider text-muted-foreground">
+                Dev Login Emails
+              </p>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  {
+                    label: "Solo",
+                    email: "solo@skerry.io",
+                    color: "text-slate-300",
+                  },
+                  {
+                    label: "Team",
+                    email: "team@skerry.io",
+                    color: "text-blue-300",
+                  },
+                  {
+                    label: "Agency",
+                    email: "agency@skerry.io",
+                    color: "text-cyan-300",
+                  },
+                ].map(acc => (
+                  <button
+                    key={acc.label}
+                    type="button"
+                    onClick={() => setEmail(acc.email)}
+                    className="rounded-lg border border-white/10 bg-white/5 px-2 py-2 text-center text-[11px] font-medium transition hover:bg-white/10"
+                  >
+                    <span className={acc.color}>{acc.label}</span>
+                    <span className="block text-[10px] text-muted-foreground mt-0.5">
+                      {acc.email}
+                    </span>
+                  </button>
+                ))}
+              </div>
+              <p className="mt-2 text-center text-[10px] text-muted-foreground">
+                Passwords are intentionally never displayed in UI.
+              </p>
             </div>
-          </div>
-        </div>
-
-        {/* Developer Mode hint */}
-        <div className="mt-4 text-center">
-          <button
-            type="button"
-            onClick={() => setDevHint(!devHint)}
-            className="inline-flex items-center gap-1.5 text-[11px] text-muted-foreground/50 hover:text-muted-foreground transition"
-          >
-            <Code2 className="h-3 w-3" />
-            Developer Mode
-          </button>
-          {devHint && (
-            <motion.div
-              initial={{ opacity: 0, y: -4 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-2 rounded-lg border border-cyan-500/20 bg-cyan-500/5 px-4 py-3 text-xs text-cyan-400"
-            >
-              <p className="font-mono">dev@skerry.io / skerry-dev-2024</p>
-              <button
-                type="button"
-                onClick={fillDev}
-                className="mt-1.5 text-[11px] underline underline-offset-2 hover:text-cyan-300"
-              >
-                Fill credentials
-              </button>
-            </motion.div>
           )}
         </div>
+
+        {isDev && (
+          <div className="mt-4 text-center">
+            <span className="inline-flex items-center gap-1.5 text-[11px] text-muted-foreground/60">
+              <Code2 className="h-3 w-3" />
+              Development mode enabled
+            </span>
+          </div>
+        )}
       </motion.div>
     </div>
   );

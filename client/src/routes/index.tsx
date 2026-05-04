@@ -20,7 +20,11 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Pulse — Skerry" },
-      { name: "description", content: "Live operational dashboard for the Asset-Based Cold Outreach System." },
+      {
+        name: "description",
+        content:
+          "Live operational dashboard for the Asset-Based Cold Outreach System.",
+      },
       { property: "og:title", content: "Pulse — Skerry" },
       { property: "og:description", content: "Live operational dashboard." },
     ],
@@ -28,26 +32,78 @@ export const Route = createFileRoute("/")({
   component: PulseDashboard,
 });
 
-const stageMeta: Record<PipelineStage, { labelKey: TranslationKey; tone: string; Icon: typeof Loader2 }> = {
-  source:  { labelKey: "pulse.stage.scraping",   tone: "text-cyan-300",    Icon: Loader2 },
-  analyze: { labelKey: "pulse.stage.analyzing",  tone: "text-blue-300",    Icon: BrainCircuit },
-  draft:   { labelKey: "pulse.stage.generating", tone: "text-sky-300",     Icon: Sparkles },
-  send:    { labelKey: "pulse.stage.done",       tone: "text-emerald-300", Icon: CheckCircle2 },
+const stageMeta: Record<
+  PipelineStage,
+  { labelKey: TranslationKey; tone: string; Icon: typeof Loader2 }
+> = {
+  source: {
+    labelKey: "pulse.stage.scraping",
+    tone: "text-cyan-300",
+    Icon: Loader2,
+  },
+  analyze: {
+    labelKey: "pulse.stage.analyzing",
+    tone: "text-blue-300",
+    Icon: BrainCircuit,
+  },
+  draft: {
+    labelKey: "pulse.stage.generating",
+    tone: "text-sky-300",
+    Icon: Sparkles,
+  },
+  send: {
+    labelKey: "pulse.stage.done",
+    tone: "text-emerald-300",
+    Icon: CheckCircle2,
+  },
 };
 
 function PulseDashboard() {
   const t = useT();
-  const tier = useAccountTierStore((s) => s.tier);
-  const leads = useLeadStore((s) => s.leads);
-  const stats = useLeadStore((s) => s.stats)();
+  const tier = useAccountTierStore(s => s.tier);
+  const leads = useLeadStore(s => s.leads);
+  const stats = useLeadStore(s => s.stats)();
 
   const isEmpty = leads.length === 0;
 
-  const cards: { labelKey: TranslationKey; value: number; metric: string; icon: typeof Telescope; accent: string }[] = [
-    { labelKey: "pulse.stat.scanned",     value: stats.total,             metric: stats.withVerifiedEmail > 0 ? `${stats.withVerifiedEmail} with email` : "no leads yet",  icon: Telescope,    accent: "from-blue-400/30 to-cyan-300/10" },
-    { labelKey: "pulse.stat.insights",    value: stats.insightsGenerated, metric: stats.insightsGenerated > 0 ? "AI-extracted" : "—",                                       icon: BrainCircuit, accent: "from-cyan-400/30 to-blue-300/10" },
-    { labelKey: "pulse.stat.newsletters", value: stats.emailsReady,        metric: stats.emailsReady > 0 ? "ready to send" : "—",                                          icon: FileText,     accent: "from-sky-400/30 to-cyan-300/10" },
-    { labelKey: "pulse.stat.pushed",      value: stats.sent,               metric: stats.sent > 0 ? "dispatched" : "—",                                                    icon: Send,         accent: "from-emerald-400/30 to-cyan-300/10" },
+  const cards: {
+    labelKey: TranslationKey;
+    value: number;
+    metric: string;
+    icon: typeof Telescope;
+    accent: string;
+  }[] = [
+    {
+      labelKey: "pulse.stat.scanned",
+      value: stats.total,
+      metric:
+        stats.withVerifiedEmail > 0
+          ? `${stats.withVerifiedEmail} with email`
+          : "no leads yet",
+      icon: Telescope,
+      accent: "from-blue-400/30 to-cyan-300/10",
+    },
+    {
+      labelKey: "pulse.stat.insights",
+      value: stats.insightsGenerated,
+      metric: stats.insightsGenerated > 0 ? "AI-extracted" : "—",
+      icon: BrainCircuit,
+      accent: "from-cyan-400/30 to-blue-300/10",
+    },
+    {
+      labelKey: "pulse.stat.newsletters",
+      value: stats.emailsReady,
+      metric: stats.emailsReady > 0 ? "ready to send" : "—",
+      icon: FileText,
+      accent: "from-sky-400/30 to-cyan-300/10",
+    },
+    {
+      labelKey: "pulse.stat.pushed",
+      value: stats.sent,
+      metric: stats.sent > 0 ? "dispatched" : "—",
+      icon: Send,
+      accent: "from-emerald-400/30 to-cyan-300/10",
+    },
   ];
 
   const liveFeed: Lead[] = leads.slice(-8).reverse();
@@ -63,10 +119,14 @@ function PulseDashboard() {
             {t("pulse.eyebrow")}
           </span>
           <h1 className="max-w-3xl text-4xl font-semibold tracking-tight md:text-5xl">
-            <span className="text-gradient-cyber">{t("pulse.titleAccent")}</span>{" "}
+            <span className="text-gradient-cyber">
+              {t("pulse.titleAccent")}
+            </span>{" "}
             <span className="text-foreground/90">{t("pulse.titleRest")}</span>
           </h1>
-          <p className="max-w-2xl text-sm text-muted-foreground">{t("pulse.subtitle")}</p>
+          <p className="max-w-2xl text-sm text-muted-foreground">
+            {t("pulse.subtitle")}
+          </p>
         </div>
       </section>
 
@@ -84,15 +144,21 @@ function PulseDashboard() {
               whileHover={{ y: -2 }}
               className="group relative overflow-hidden rounded-xl glass p-5 transition hover:shadow-[0_0_40px_-12px_oklch(0.78_0.18_220_/_0.5)]"
             >
-              <div className={`absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-to-br ${c.accent} blur-2xl opacity-70`} />
+              <div
+                className={`absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-to-br ${c.accent} blur-2xl opacity-70`}
+              />
               <div className="relative flex items-center justify-between">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/5 ring-1 ring-white/10">
                   <Icon className="h-4 w-4 text-cyan-300" />
                 </div>
               </div>
               <div className="relative mt-6">
-                <div className="text-3xl font-semibold tracking-tight">{c.value.toLocaleString()}</div>
-                <div className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">{label}</div>
+                <div className="text-3xl font-semibold tracking-tight">
+                  {c.value.toLocaleString()}
+                </div>
+                <div className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">
+                  {label}
+                </div>
                 <div className="mt-2 text-xs text-cyan-300/80">{c.metric}</div>
               </div>
             </motion.div>
@@ -105,8 +171,12 @@ function PulseDashboard() {
         <div className="lg:col-span-2 rounded-xl glass p-6">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-semibold tracking-tight">{t("pulse.feed.title")}</h2>
-              <p className="text-xs text-muted-foreground">{t("pulse.feed.subtitle")}</p>
+              <h2 className="text-lg font-semibold tracking-tight">
+                {t("pulse.feed.title")}
+              </h2>
+              <p className="text-xs text-muted-foreground">
+                {t("pulse.feed.subtitle")}
+              </p>
             </div>
             {!isEmpty && (
               <span className="flex items-center gap-2 text-[11px] text-muted-foreground">
@@ -136,7 +206,9 @@ function PulseDashboard() {
                     className="group relative flex items-start gap-4 rounded-lg px-3 py-3 transition hover:bg-white/[0.03]"
                   >
                     <div className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0a0a0c] ring-1 ring-white/10">
-                      <Icon className={`h-3.5 w-3.5 ${meta.tone} ${animate ? "animate-spin [animation-duration:3s]" : ""}`} />
+                      <Icon
+                        className={`h-3.5 w-3.5 ${meta.tone} ${animate ? "animate-spin [animation-duration:3s]" : ""}`}
+                      />
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-baseline gap-x-2">
@@ -150,11 +222,15 @@ function PulseDashboard() {
                       <div className="mt-0.5 flex items-center gap-2 text-[11px]">
                         <span className={meta.tone}>{t(meta.labelKey)}</span>
                         <span className="text-muted-foreground/60">·</span>
-                        <span className="text-muted-foreground/70 truncate">{lead.organization.website}</span>
+                        <span className="text-muted-foreground/70 truncate">
+                          {lead.organization.website}
+                        </span>
                         {lead.personal.email && (
                           <>
                             <span className="text-muted-foreground/60">·</span>
-                            <span className="text-emerald-300/80 truncate">{lead.personal.email}</span>
+                            <span className="text-emerald-300/80 truncate">
+                              {lead.personal.email}
+                            </span>
                           </>
                         )}
                       </div>
@@ -174,18 +250,32 @@ function PulseDashboard() {
 
         <div className="space-y-6">
           <div className="rounded-xl glass p-6">
-            <h3 className="text-sm font-semibold">{t("pulse.integrity.title")}</h3>
-            <p className="mt-1 text-xs text-muted-foreground">{t("pulse.integrity.subtitle")}</p>
+            <h3 className="text-sm font-semibold">
+              {t("pulse.integrity.title")}
+            </h3>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {t("pulse.integrity.subtitle")}
+            </p>
             <div className="mt-5 space-y-3">
-              {([
-                { labelKey: "pulse.integrity.apify",     pct: isEmpty ? 0 : 98 },
-                { labelKey: "pulse.integrity.scraping",  pct: isEmpty ? 0 : 92 },
-                { labelKey: "pulse.integrity.gpt",       pct: isEmpty ? 0 : 96 },
-                { labelKey: "pulse.integrity.instantly", pct: isEmpty ? 0 : 88 },
-              ] as const).map((b) => (
+              {(
+                [
+                  { labelKey: "pulse.integrity.apify", pct: isEmpty ? 0 : 98 },
+                  {
+                    labelKey: "pulse.integrity.scraping",
+                    pct: isEmpty ? 0 : 92,
+                  },
+                  { labelKey: "pulse.integrity.gpt", pct: isEmpty ? 0 : 96 },
+                  {
+                    labelKey: "pulse.integrity.instantly",
+                    pct: isEmpty ? 0 : 88,
+                  },
+                ] as const
+              ).map(b => (
                 <div key={b.labelKey}>
                   <div className="flex justify-between text-[11px]">
-                    <span className="text-muted-foreground">{t(b.labelKey)}</span>
+                    <span className="text-muted-foreground">
+                      {t(b.labelKey)}
+                    </span>
                     <span className="text-foreground">{b.pct}%</span>
                   </div>
                   <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-white/5">
@@ -220,7 +310,9 @@ function PulseDashboard() {
             <div className="relative overflow-hidden rounded-xl glass p-6">
               <div className="absolute -bottom-12 -right-10 h-40 w-40 rounded-full bg-blue-400/20 blur-3xl" />
               <h3 className="text-sm font-semibold">Team Activity</h3>
-              <p className="mt-1 text-xs text-muted-foreground">Shared pipeline with team members</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Shared pipeline with team members
+              </p>
               <div className="mt-4 space-y-2">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-muted-foreground">Team members</span>
@@ -247,7 +339,12 @@ function EmptyFeed() {
       </div>
       <h3 className="text-sm font-semibold text-foreground">No leads yet</h3>
       <p className="mt-1 max-w-sm text-xs text-muted-foreground">
-        Click <span className="font-medium text-foreground">&ldquo;Find New Leads&rdquo;</span> in the header to start a research run. AI will discover, enrich, and surface verified prospects here in real time.
+        Click{" "}
+        <span className="font-medium text-foreground">
+          &ldquo;Find New Leads&rdquo;
+        </span>{" "}
+        in the header to start a research run. AI will discover, enrich, and
+        surface verified prospects here in real time.
       </p>
       <div className="mt-3 flex items-center gap-2 text-[11px] text-muted-foreground">
         <AlertTriangle className="h-3 w-3 text-amber-300" />

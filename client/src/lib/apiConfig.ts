@@ -33,7 +33,7 @@ export function getApiKey(service: ApiService): string {
 }
 
 export function configuredServices(): ApiService[] {
-  return (Object.keys(apiConfig) as ApiService[]).filter((s) => hasApiKey(s));
+  return (Object.keys(apiConfig) as ApiService[]).filter(s => hasApiKey(s));
 }
 
 export type { ApiService };
