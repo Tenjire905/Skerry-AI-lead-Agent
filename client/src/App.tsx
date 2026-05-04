@@ -10,7 +10,7 @@ const router = getRouter();
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider defaultTheme="dark">
+      <ThemeProvider defaultTheme="system" switchable>
         <TooltipProvider>
           <Toaster />
           <RouterProvider router={router} />

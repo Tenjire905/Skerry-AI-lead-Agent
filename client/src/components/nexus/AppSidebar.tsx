@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Users, Mail, Settings, Hexagon } from "lucide-react";
+import { LayoutDashboard, Users, Mail, Settings, Hexagon, CreditCard } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -18,6 +18,7 @@ const items = [
   { titleKey: "sidebar.dashboard" as const, url: "/", icon: LayoutDashboard },
   { titleKey: "sidebar.leads" as const, url: "/workspace", icon: Users },
   { titleKey: "sidebar.forge" as const, url: "/forge", icon: Mail },
+  { title: "Billing", url: "/billing", icon: CreditCard },
   { titleKey: "sidebar.settings" as const, url: "/settings", icon: Settings },
 ];
 
@@ -50,7 +51,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => {
-                const label = t(item.titleKey);
+                const label = "title" in item ? item.title : t(item.titleKey);
                 return (
                   <SidebarMenuItem key={item.titleKey}>
                     <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={label}>

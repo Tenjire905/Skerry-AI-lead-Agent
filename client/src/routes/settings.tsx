@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { CheckCircle2, AlertTriangle, KeyRound, Languages, RotateCcw, ShieldCheck, Sparkles, Code2 } from "lucide-react";
+import { CheckCircle2, AlertTriangle, KeyRound, Languages, RotateCcw, ShieldCheck, Sparkles, Code2, Moon, Sun, Monitor } from "lucide-react";
 import { useT, useLanguageStore, type Language } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/authStore";
@@ -7,6 +7,7 @@ import { useAccountTierStore } from "@/store/accountTierStore";
 import { TIER_CONFIGS } from "@/store/researchStore";
 import { Progress } from "@/components/ui/progress";
 import { apiConfig, hasApiKey } from "@/lib/apiConfig";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({
@@ -27,6 +28,7 @@ function SettingsPage() {
   const config = TIER_CONFIGS[tier];
   const user = useAuthStore((s) => s.user);
   const isDeveloper = user?.role === "developer";
+  const { mode, setMode } = useTheme();
 
   const handleResetOnboarding = () => {
     localStorage.removeItem("skerry-onboarding-profile");
@@ -194,6 +196,38 @@ function SettingsPage() {
               </button>
             );
           })}
+        </div>
+
+        <div className="mt-6">
+          <h3 className="text-base font-semibold tracking-tight">Theme</h3>
+          <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
+            Choose your appearance mode for the app.
+          </p>
+          <div className="mt-4 inline-flex items-center gap-2 rounded-xl glass p-2">
+            {[
+              { value: "light" as const, label: "Light", icon: Sun },
+              { value: "dark" as const, label: "Dark", icon: Moon },
+              { value: "system" as const, label: "System", icon: Monitor },
+            ].map((themeOption) => {
+              const active = mode === themeOption.value;
+              const Icon = themeOption.icon;
+              return (
+                <button
+                  key={themeOption.value}
+                  type="button"
+                  onClick={() => setMode(themeOption.value)}
+                  className={`inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium transition ${
+                    active
+                      ? "bg-cyan-300/15 text-cyan-100 ring-1 ring-cyan-300/30"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                  {themeOption.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 

@@ -22,6 +22,7 @@ import "dotenv/config";
 
 import express from "express";
 import { createServer } from "http";
+import fs from "node:fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -190,9 +191,13 @@ async function startServer() {
     process.env.NODE_ENV === "production"
       ? path.resolve(__dirname, "public")
       : path.resolve(__dirname, "..", "dist", "public");
+  const indexPath = path.join(staticPath, "index.html");
   app.use(express.static(staticPath));
-  app.get("*", (_req, res) => {
-    res.sendFile(path.join(staticPath, "index.html"));
+  app.get("*", (req, res) => {
+    if (process.env.NODE_ENV !== "production" && !fs.existsSync(indexPath)) {
+      return res.redirect(302, `http://localhost:3000${req.originalUrl}`);
+    }
+    res.sendFile(indexPath);
   });
 
   const port = Number(process.env.PORT ?? 3001);

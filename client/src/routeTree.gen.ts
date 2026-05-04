@@ -9,12 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as BillingRouteImport } from './routes/billing'
 import { Route as WorkspaceRouteImport } from './routes/workspace'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as InsightRouteImport } from './routes/insight'
 import { Route as ForgeRouteImport } from './routes/forge'
 import { Route as IndexRouteImport } from './routes/index'
 
+const BillingRoute = BillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WorkspaceRoute = WorkspaceRouteImport.update({
   id: '/workspace',
   path: '/workspace',
@@ -43,6 +49,7 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/billing': typeof BillingRoute
   '/forge': typeof ForgeRoute
   '/insight': typeof InsightRoute
   '/settings': typeof SettingsRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/billing': typeof BillingRoute
   '/forge': typeof ForgeRoute
   '/insight': typeof InsightRoute
   '/settings': typeof SettingsRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/billing': typeof BillingRoute
   '/forge': typeof ForgeRoute
   '/insight': typeof InsightRoute
   '/settings': typeof SettingsRoute
@@ -65,14 +74,15 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/forge' | '/insight' | '/settings' | '/workspace'
+  fullPaths: '/' | '/billing' | '/forge' | '/insight' | '/settings' | '/workspace'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/forge' | '/insight' | '/settings' | '/workspace'
-  id: '__root__' | '/' | '/forge' | '/insight' | '/settings' | '/workspace'
+  to: '/' | '/billing' | '/forge' | '/insight' | '/settings' | '/workspace'
+  id: '__root__' | '/' | '/billing' | '/forge' | '/insight' | '/settings' | '/workspace'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BillingRoute: typeof BillingRoute
   ForgeRoute: typeof ForgeRoute
   InsightRoute: typeof InsightRoute
   SettingsRoute: typeof SettingsRoute
@@ -81,6 +91,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/billing': {
+      id: '/billing'
+      path: '/billing'
+      fullPath: '/billing'
+      preLoaderRoute: typeof BillingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/workspace': {
       id: '/workspace'
       path: '/workspace'
@@ -121,6 +138,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BillingRoute: BillingRoute,
   ForgeRoute: ForgeRoute,
   InsightRoute: InsightRoute,
   SettingsRoute: SettingsRoute,
