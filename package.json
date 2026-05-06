@@ -45,7 +45,7 @@
     "@supabase/supabase-js": "^2.105.3",
     "@tanstack/react-router": "^1.169.1",
     "ai": "^6.0.175",
-    "axios": "^1.12.0",
+    "axios": "^1.16.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
