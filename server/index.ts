@@ -38,6 +38,13 @@ import rateLimit from "express-rate-limit";
 import { z } from "zod";
 import { EntitlementDb } from "./db";
 import { assertEnterpriseProductionConfig } from "./productionConfig";
+import { mountOpenApi } from "./openapi";
+import { redact } from "./redact";
+import { withBreaker, CircuitOpenError } from "./circuitBreaker";
+import {
+  initObservability,
+  captureException as obsCaptureException,
+} from "./observability";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -207,11 +214,15 @@ function logEvent(
   event: string,
   payload: Record<string, unknown>
 ): void {
+  // SEC.5: scrub PII / secrets from anything that hits stdout. The redactor
+  // is conservative — extend the deny list in `server/redact.ts` if a new
+  // sensitive field is added.
+  const safePayload = redact(payload);
   const entry = {
     ts: new Date().toISOString(),
     level,
     event,
-    ...payload,
+    ...safePayload,
   };
   const line = JSON.stringify(entry);
   if (level === "error") {
@@ -259,6 +270,32 @@ async function fetchWithTimeoutRetry(
     provider: string;
   }
 ): Promise<Response> {
+  // GL.5: wrap the retry loop in a circuit breaker so a flapping upstream
+  // gets isolated quickly rather than burning our retry budget on every
+  // request.
+  return withBreaker(options.provider, () =>
+    runFetchWithRetries(url, init, options)
+  ).catch(err => {
+    if (err instanceof CircuitOpenError) {
+      logEvent("warn", "provider_breaker_open", {
+        requestId: options.requestId,
+        provider: options.provider,
+      });
+    }
+    throw err;
+  });
+}
+
+async function runFetchWithRetries(
+  url: string,
+  init: RequestInit,
+  options: {
+    timeoutMs: number;
+    retries: number;
+    requestId: string;
+    provider: string;
+  }
+): Promise<Response> {
   let lastErr: unknown;
   for (let attempt = 0; attempt <= options.retries; attempt++) {
     const controller = new AbortController();
@@ -269,6 +306,11 @@ async function fetchWithTimeoutRetry(
       if (resp.ok) return resp;
       if (resp.status >= 500 && attempt < options.retries) {
         continue;
+      }
+      // 5xx after exhausting retries should be treated as a failure for the
+      // circuit breaker upstream — throw rather than return.
+      if (resp.status >= 500) {
+        throw new Error(`provider_5xx:${options.provider}:${resp.status}`);
       }
       return resp;
     } catch (err) {
@@ -691,6 +733,7 @@ export async function buildApp(): Promise<express.Express> {
     );
   }
   assertEnterpriseProductionConfig();
+  await initObservability();
 
   const app = express();
   app.disable("x-powered-by");
@@ -700,14 +743,42 @@ export async function buildApp(): Promise<express.Express> {
   await entitlementDb.init();
 
   app.set("trust proxy", 1);
+
+  // SEC.2: strict CSP + standard hardening headers in production.
+  // Dev intentionally skips CSP because Vite injects HMR scripts inline.
+  const isProd = process.env.NODE_ENV === "production";
   app.use(
     helmet({
-      contentSecurityPolicy: false,
-      crossOriginResourcePolicy: false,
-      hsts:
-        process.env.NODE_ENV === "production"
-          ? { maxAge: 31536000, includeSubDomains: true, preload: false }
-          : false,
+      contentSecurityPolicy: isProd
+        ? {
+            useDefaults: true,
+            directives: {
+              "default-src": ["'self'"],
+              "script-src": ["'self'"],
+              // React + radix + many UI libs add inline `style=` attributes;
+              // 'unsafe-inline' for *style only* is the standard concession.
+              "style-src": [
+                "'self'",
+                "'unsafe-inline'",
+                "https://fonts.googleapis.com",
+              ],
+              "font-src": ["'self'", "https://fonts.gstatic.com", "data:"],
+              "img-src": ["'self'", "data:", "blob:", "https:"],
+              "connect-src": ["'self'"],
+              "frame-ancestors": ["'none'"],
+              "base-uri": ["'self'"],
+              "form-action": ["'self'"],
+              "object-src": ["'none'"],
+              "upgrade-insecure-requests": [],
+            },
+          }
+        : false,
+      crossOriginResourcePolicy: { policy: "same-site" },
+      crossOriginOpenerPolicy: { policy: "same-origin" },
+      referrerPolicy: { policy: "strict-origin-when-cross-origin" },
+      hsts: isProd
+        ? { maxAge: 31536000, includeSubDomains: true, preload: false }
+        : false,
     })
   );
   app.use(express.json({ limit: "1mb" }));
@@ -833,6 +904,9 @@ export async function buildApp(): Promise<express.Express> {
     subject: z.string().max(300).optional(),
     bodyMarkdown: z.string().min(1).max(50000),
   });
+
+  // Public, unauthenticated developer docs.
+  mountOpenApi(app);
 
   app.post("/api/auth/login", authLimiter, (req, res) => {
     const parsed = loginSchema.safeParse(req.body ?? {});
@@ -1448,6 +1522,7 @@ export async function buildApp(): Promise<express.Express> {
           error: err instanceof Error ? err.message : String(err),
           stack: err instanceof Error ? err.stack : undefined,
         });
+        obsCaptureException(err, { requestId, route: req.path });
       }
       if (!res.headersSent) {
         const exposeDetail = process.env.NODE_ENV !== "production";

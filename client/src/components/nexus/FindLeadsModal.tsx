@@ -24,6 +24,7 @@ import {
 } from "@/lib/skerryApi";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { UsageDisplay } from "@/components/nexus/UsageDisplay";
 import { toast } from "sonner";
 
 interface FindLeadsModalProps {
@@ -165,7 +166,6 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
     agency: "border-cyan-500/30 text-cyan-400 bg-cyan-500/5",
   };
 
-  const usagePct = Math.round((tierUsage.runsUsed / config.monthlyLimit) * 100);
   const runGuard = canStartRun(tier);
   const estimatedRunCost = estimateRunCostUsd(
     tier,
@@ -265,27 +265,11 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
                       </div>
                     </div>
 
-                    {/* Monthly usage */}
-                    <div>
-                      <div className="mb-1.5 flex items-center justify-between text-[11px]">
-                        <span className="text-muted-foreground">
-                          Monthly Usage
-                        </span>
-                        <span className="text-foreground">
-                          {tierUsage.runsUsed} / {config.monthlyLimit} runs
-                        </span>
-                      </div>
-                      <Progress value={usagePct} className="h-1.5" />
-                      {usagePct > 80 && (
-                        <p className="mt-1 text-[11px] text-amber-400">
-                          ⚠ Approaching monthly limit. Consider upgrading.
-                        </p>
-                      )}
-                      <p className="mt-1 text-[11px] text-muted-foreground">
-                        Estimated spend this month: $
-                        {tierUsage.estimatedSpendUsd.toFixed(2)}
-                      </p>
-                    </div>
+                    <UsageDisplay
+                      runsUsed={tierUsage.runsUsed}
+                      monthlyLimit={config.monthlyLimit}
+                      estimatedSpendUsd={tierUsage.estimatedSpendUsd}
+                    />
 
                     {/* Business context */}
                     {profile && (

@@ -1,0 +1,59 @@
+name: Daily Backup
+
+on:
+  schedule:
+    # 03:00 UTC daily.
+    - cron: "0 3 * * *"
+  # Allow manual triggers from the Actions tab for ad-hoc backups / drills.
+  workflow_dispatch:
+
+# Only one backup at a time, even if a prior run is still in flight.
+concurrency:
+  group: daily-backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Postgres client (matches server major version)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends postgresql-client-16 openssl
+          pg_dump --version
+
+      - name: Configure AWS / R2 credentials (env scope)
+        run: |
+          echo "AWS credentials are passed via env from secrets in the run step."
+
+      - name: Run encrypted backup
+        env:
+          DATABASE_URL: ${{ secrets.BACKUP_DATABASE_URL }}
+          BACKUP_BUCKET: ${{ secrets.BACKUP_BUCKET }}
+          BACKUP_ENCRYPTION_KEY: ${{ secrets.BACKUP_ENCRYPTION_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.BACKUP_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.BACKUP_AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.BACKUP_AWS_REGION }}
+          AWS_ENDPOINT_URL_S3: ${{ secrets.BACKUP_AWS_ENDPOINT_URL_S3 }}
+          BACKUP_RETENTION_DAYS: ${{ vars.BACKUP_RETENTION_DAYS || '30' }}
+          BACKUP_PREFIX: daily
+        run: bash scripts/backup.sh
+
+      - name: Notify on failure
+        if: failure()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.OPS_SLACK_WEBHOOK_URL }}
+        run: |
+          if [[ -n "${SLACK_WEBHOOK_URL}" ]]; then
+            curl -fsS -X POST -H 'Content-Type: application/json' \
+              --data "{\"text\":\":rotating_light: Skerry daily backup FAILED — run ${GITHUB_RUN_ID}: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}\"}" \
+              "${SLACK_WEBHOOK_URL}" || true
+          else
+            echo "OPS_SLACK_WEBHOOK_URL not set; skipping alert."
+          fi
