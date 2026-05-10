@@ -135,6 +135,29 @@ These were flagged ⚠️ in the checklist; pick a direction so I can implement.
 | Pen-test scheduled? when? | `<…>` | ❓ |
 | Data-residency commitment for EU customers (EU-only? best-effort?) | `<…>` | ❓ |
 
+## 7b · Landing site (`skerry.cloud`)
+
+The waitlist landing page lives in [`landing/`](../landing/) and deploys to
+Cloudflare Pages independently of the app. See
+[`landing/README.md`](../landing/README.md) for the full deploy runbook.
+
+| Key | Value | Status |
+|---|---|---|
+| Cloudflare Pages project name | `skerry-landing` | ❓ |
+| Production branch | `main` (or another) | ❓ |
+| `PUBLIC_SITE_URL` | `https://skerry.cloud` | ❓ |
+| Supabase project for waitlist (same as app, or separate?) | `<…>` | ❓ |
+| Resend sender domain authenticated (SPF+DKIM+DMARC pass)? | yes / no | ❓ |
+| `RESEND_FROM_EMAIL` | `hello@skerry.cloud` | ❓ |
+| `RESEND_REPLY_TO` | `hello@skerry.cloud` | ❓ |
+| Stripe one-time price for founding deposit (€19) | Price ID | ❓ |
+| Stripe webhook endpoint live (`/api/stripe-webhook`)? | yes / no | ❓ |
+| Stripe `STRIPE_WEBHOOK_SECRET` set in Pages (Production)? | ✅ when set | ❓ |
+| Cloudflare Web Analytics or Plausible — which? | `<…>` | ❓ |
+| Privacy policy lives at `/privacy` (placeholder) — when does the real one ship? | `<date>` | ❓ |
+| Terms live at `/terms` (placeholder) — when does the real one ship? | `<date>` | ❓ |
+| Launch traffic plan (Product Hunt / IndieHackers / LinkedIn — pick channels) | `<…>` | ❓ |
+
 ## 8 · First restore drill (GL.7)
 
 Once you've run the drill per `runbooks/restore.md` §9, paste:

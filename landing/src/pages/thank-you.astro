@@ -1,0 +1,32 @@
+---
+import Layout from "@/layouts/Layout.astro";
+
+const url = new URL(Astro.request.url);
+const session = url.searchParams.get("session_id");
+---
+
+<Layout
+  title="Founding spot reserved — Skerry"
+  description="Your founding spot is locked in."
+  canonicalPath="/thank-you"
+  noindex
+>
+  <main class="mx-auto flex min-h-screen max-w-xl flex-col justify-center px-6 py-16 text-center">
+    <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand-400/10 ring-1 ring-brand-400/20">
+      <svg class="h-6 w-6 text-brand-400" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M5 12l5 5L20 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </div>
+    <h1 class="mt-6 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+      You're in.
+    </h1>
+    <p class="mt-4 text-base text-slate-300">
+      Your founding spot is locked. We'll email you the second access opens —
+      and your €19 will appear as credit on your first invoice.
+    </p>
+    {session && (
+      <p class="mt-4 text-xs text-slate-500">Stripe session · {session}</p>
+    )}
+    <a href="/" class="btn-ghost mt-8 inline-flex">Back to skerry.cloud</a>
+  </main>
+</Layout>

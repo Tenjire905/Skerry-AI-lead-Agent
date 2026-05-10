@@ -1,0 +1,56 @@
+---
+import Layout from "@/layouts/Layout.astro";
+---
+
+<Layout
+  title="Privacy — Skerry"
+  description="How Skerry handles waitlist data."
+  canonicalPath="/privacy"
+>
+  <main class="mx-auto max-w-3xl px-6 py-20">
+    <a href="/" class="text-xs text-slate-500 hover:text-slate-300">← Back</a>
+    <h1 class="mt-6 text-3xl font-semibold tracking-tight text-white">Privacy</h1>
+    <p class="mt-3 text-xs text-slate-500">Last updated: 2026-05-09</p>
+
+    <div class="prose prose-invert mt-8 max-w-none text-slate-300">
+      <p>
+        This is a placeholder until the full privacy policy is live. The short
+        version that applies during the waitlist phase:
+      </p>
+
+      <h2 class="text-white">What we collect on the waitlist</h2>
+      <ul>
+        <li>Email address you submit.</li>
+        <li>UTM tags from the URL, referrer, country (from IP — IP itself not stored).</li>
+        <li>If you reserve a founding spot: Stripe customer ID + payment session ID. Card details are stored by Stripe, never by us.</li>
+      </ul>
+
+      <h2 class="text-white">What we do with it</h2>
+      <ul>
+        <li>Send you waitlist confirmation + launch notification (Resend).</li>
+        <li>Track signup volume to plan capacity.</li>
+        <li>That's it. No third-party advertising, no list-selling, no mystery enrichment.</li>
+      </ul>
+
+      <h2 class="text-white">Where it lives</h2>
+      <ul>
+        <li>Supabase Postgres (EU region available).</li>
+        <li>Resend (email delivery).</li>
+        <li>Stripe (payments, only if you reserve a founding spot).</li>
+        <li>Cloudflare (CDN + Pages hosting).</li>
+      </ul>
+
+      <h2 class="text-white">Removing your data</h2>
+      <p>
+        Email <a href="mailto:hello@skerry.cloud" class="text-brand-300">hello@skerry.cloud</a>
+        with "delete me" in the subject. We remove within 7 days and confirm.
+      </p>
+
+      <h2 class="text-white">Contact</h2>
+      <p>
+        Questions: <a href="mailto:hello@skerry.cloud" class="text-brand-300">hello@skerry.cloud</a>.
+        Security disclosures: <a href="mailto:security@skerry.cloud" class="text-brand-300">security@skerry.cloud</a>.
+      </p>
+    </div>
+  </main>
+</Layout>

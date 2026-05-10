@@ -1,0 +1,340 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import WaitlistForm from "@/components/WaitlistForm.tsx";
+import FoundingDepositCTA from "@/components/FoundingDepositCTA.tsx";
+---
+
+<Layout>
+  <!-- NAV -->
+  <header class="mx-auto flex max-w-6xl items-center justify-between px-6 pt-8">
+    <a href="/" class="flex items-center gap-2.5">
+      <svg
+        viewBox="0 0 100 100"
+        class="h-9 w-9 drop-shadow-[0_0_18px_rgba(167,139,250,0.45)]"
+        fill="none"
+        aria-hidden="true"
+      >
+        <polygon
+          points="86.4,29 50,8 13.6,29 13.6,71 50,92 86.4,71"
+          stroke="#a78bfa"
+          stroke-width="5"
+          stroke-linejoin="round"
+          stroke-linecap="round"></polygon>
+        <polygon
+          points="65.6,41 50,32 34.4,41 34.4,59 50,68 65.6,59"
+          stroke="#a78bfa"
+          stroke-width="3"
+          stroke-linejoin="round"></polygon>
+        <path
+          d="M50 42 V58 M42 50 H58"
+          stroke="#ffffff"
+          stroke-width="3.5"
+          stroke-linecap="round"></path>
+      </svg>
+      <span class="text-sm font-semibold tracking-tight text-white">Skerry</span>
+      <span class="hidden text-xs uppercase tracking-[0.22em] text-brand-300/80 sm:inline">
+        · Lead-Gen OS
+      </span>
+    </a>
+    <nav class="hidden items-center gap-7 text-sm text-slate-400 md:flex">
+      <a href="#how" class="hover:text-white">How it works</a>
+      <a href="#pricing" class="hover:text-white">Pricing</a>
+      <a href="#faq" class="hover:text-white">FAQ</a>
+    </nav>
+    <a href="#waitlist" class="btn-ghost text-xs">Join waitlist</a>
+  </header>
+
+  <!-- HERO -->
+  <section
+    id="waitlist"
+    class="mx-auto max-w-6xl px-6 pb-24 pt-20 sm:pt-28 lg:pt-36"
+  >
+    <div class="max-w-3xl">
+      <span class="eyebrow">Private beta · Coming Q3 2026</span>
+      <h1
+        class="mt-5 text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl"
+      >
+        The AI sales agent your team
+        <span class="text-gradient-brand">forgot to hire.</span>
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-slate-300">
+        Tell Skerry your ICP. Get back verified prospects, deeply researched,
+        with a personalized first-touch email — ready to push to Instantly. No
+        SDR seat. No Apollo subscription. No spreadsheets.
+      </p>
+
+      <div class="mt-10 max-w-2xl">
+        <WaitlistForm client:load />
+      </div>
+
+      <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-slate-400">
+        <span class="flex items-center gap-2">
+          <svg class="h-3.5 w-3.5 text-brand-400" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M5 12l5 5L20 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          GDPR-ready · EU data residency
+        </span>
+        <span class="flex items-center gap-2">
+          <svg class="h-3.5 w-3.5 text-brand-400" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M5 12l5 5L20 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          Apollo + verified email built-in
+        </span>
+        <span class="flex items-center gap-2">
+          <svg class="h-3.5 w-3.5 text-brand-400" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M5 12l5 5L20 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          1-click push to Instantly
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how" class="mx-auto max-w-6xl px-6 pb-24">
+    <div class="mb-12 max-w-2xl">
+      <span class="eyebrow">How it works</span>
+      <h2 class="mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+        From ICP to inbox in four steps.
+      </h2>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {[
+        {
+          n: "01",
+          title: "Define your ICP",
+          body: "Vertical, headcount, region, role. Or paste a target customer URL.",
+        },
+        {
+          n: "02",
+          title: "Skerry researches",
+          body: "Apollo for sourcing, Apify for enrichment, NeverBounce for deliverability.",
+        },
+        {
+          n: "03",
+          title: "AI drafts personalized outreach",
+          body: "GPT-4-class copy, grounded in each prospect's actual context — not generic merge tags.",
+        },
+        {
+          n: "04",
+          title: "Push to Instantly",
+          body: "One click. Or export CSV. Or hand off to your existing tool.",
+        },
+      ].map((step) => (
+        <div class="panel flex flex-col p-5">
+          <div class="text-[11px] font-semibold tracking-[0.22em] text-brand-300/80">
+            {step.n}
+          </div>
+          <h3 class="mt-2 text-base font-semibold text-white">{step.title}</h3>
+          <p class="mt-2 text-sm leading-relaxed text-slate-400">{step.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- FOUNDING OFFER -->
+  <section
+    id="pricing"
+    class="mx-auto max-w-6xl px-6 pb-24"
+  >
+    <div class="grid gap-8 rounded-3xl border border-brand-400/20 bg-gradient-to-br from-brand-500/[0.08] to-brand-300/[0.02] p-8 lg:grid-cols-2 lg:p-12">
+      <div>
+        <span class="eyebrow">Founding members</span>
+        <h2 class="mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+          Lock <span class="text-gradient-brand">50% off</span> for life.
+        </h2>
+        <p class="mt-4 text-base leading-relaxed text-slate-300">
+          The first 100 customers get half-price for as long as they stay
+          subscribed. Pay €19 now to reserve your spot — fully refundable any
+          time before launch. No catch, no auto-charge, no upsell traps.
+        </p>
+        <ul class="mt-6 space-y-2.5 text-sm text-slate-300">
+          <li class="flex items-start gap-2.5">
+            <span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-400"></span>
+            50% off any plan, locked for life
+          </li>
+          <li class="flex items-start gap-2.5">
+            <span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-400"></span>
+            First access — at least two weeks before public launch
+          </li>
+          <li class="flex items-start gap-2.5">
+            <span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-400"></span>
+            Direct line to the founder for feedback that ships
+          </li>
+          <li class="flex items-start gap-2.5">
+            <span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-400"></span>
+            100% refund any time before we go live
+          </li>
+        </ul>
+      </div>
+      <div class="panel flex flex-col justify-center p-6 lg:p-8">
+        <div class="text-[11px] uppercase tracking-[0.22em] text-brand-300/80">
+          Founding spot
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-5xl font-semibold text-white">€19</span>
+          <span class="text-sm text-slate-400">refundable deposit</span>
+        </div>
+        <p class="mt-4 text-xs text-slate-400">
+          Locks 50% off lifetime. Applied as credit on your first invoice.
+        </p>
+        <div class="mt-6">
+          <FoundingDepositCTA client:load />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLAN TEASE -->
+  <section class="mx-auto max-w-6xl px-6 pb-24">
+    <div class="mb-10 max-w-2xl">
+      <span class="eyebrow">Plans at launch</span>
+      <h2 class="mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+        Pricing you can scale into.
+      </h2>
+      <p class="mt-3 text-sm text-slate-400">
+        Final pricing TBD — what's locked is the 50% founding discount.
+        Indicative tiers below.
+      </p>
+    </div>
+    <div class="grid gap-4 lg:grid-cols-3">
+      {[
+        {
+          name: "Solo",
+          who: "Indie founders, freelancers",
+          price: "€49",
+          per: "/month",
+          features: [
+            "5 lead-runs / month",
+            "Up to 25 verified leads / run",
+            "Apollo + GPT drafting",
+            "CSV export",
+          ],
+        },
+        {
+          name: "Team",
+          who: "1–10 person sales orgs",
+          price: "€149",
+          per: "/month",
+          highlight: true,
+          features: [
+            "20 lead-runs / month",
+            "Up to 100 verified leads / run",
+            "Push to Instantly",
+            "Multi-ICP campaigns",
+          ],
+        },
+        {
+          name: "Agency",
+          who: "Outbound shops, multi-tenant",
+          price: "€399",
+          per: "/month",
+          features: [
+            "Unlimited runs",
+            "Up to 500 verified leads / run",
+            "White-label workspaces",
+            "Priority support",
+          ],
+        },
+      ].map((plan) => (
+        <div
+          class={`panel flex flex-col p-6 ${plan.highlight ? "ring-1 ring-brand-400/40" : ""}`}
+        >
+          {plan.highlight && (
+            <span class="mb-3 inline-flex w-fit items-center rounded-full bg-brand-400/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-brand-300">
+              Most popular
+            </span>
+          )}
+          <div class="text-sm font-semibold text-white">{plan.name}</div>
+          <div class="mt-1 text-xs text-slate-400">{plan.who}</div>
+          <div class="mt-5 flex items-baseline gap-1">
+            <span class="text-3xl font-semibold text-white">{plan.price}</span>
+            <span class="text-xs text-slate-400">{plan.per}</span>
+          </div>
+          <ul class="mt-5 space-y-2 text-sm text-slate-300">
+            {plan.features.map((f) => (
+              <li class="flex items-start gap-2">
+                <span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-brand-400"></span>
+                {f}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="mx-auto max-w-3xl px-6 pb-24">
+    <div class="mb-10">
+      <span class="eyebrow">FAQ</span>
+      <h2 class="mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+        Common questions.
+      </h2>
+    </div>
+    <div class="space-y-3">
+      {[
+        {
+          q: "When does Skerry launch?",
+          a: "Private beta opens Q3 2026. Founding members get access at least two weeks before public launch.",
+        },
+        {
+          q: "Is the €19 deposit really refundable?",
+          a: "Yes. Email us before launch and we refund in full, no questions. After launch it converts to credit on your first invoice.",
+        },
+        {
+          q: "Where does the data come from?",
+          a: "Sourcing via Apollo, enrichment via Apify, deliverability checks via NeverBounce, drafting via OpenAI. We don't scrape unauthorized sources.",
+        },
+        {
+          q: "How is this different from Apollo + ChatGPT?",
+          a: "Skerry is one workflow with shared context. The same prospect data that finds the lead also writes the email — so personalization is grounded, not hallucinated. No copy-paste between tools.",
+        },
+        {
+          q: "GDPR / data residency?",
+          a: "EU residency available at launch (Frankfurt). Full DPA + subprocessor list published before public launch.",
+        },
+        {
+          q: "Do I need Instantly?",
+          a: "No. Instantly is the easiest push, but you can also export CSV or use any sender via API.",
+        },
+      ].map((item) => (
+        <details class="panel group p-5 transition open:bg-white/[0.06]">
+          <summary class="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-white">
+            {item.q}
+            <span class="ml-4 text-brand-400 transition group-open:rotate-45">+</span>
+          </summary>
+          <p class="mt-3 text-sm leading-relaxed text-slate-400">{item.a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <!-- BOTTOM CTA -->
+  <section class="mx-auto max-w-4xl px-6 pb-24">
+    <div class="panel p-8 text-center lg:p-12">
+      <h2 class="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+        Get on the list. Skip the queue if you mean it.
+      </h2>
+      <p class="mx-auto mt-3 max-w-xl text-sm text-slate-400">
+        We'd rather have 100 customers who paid €19 than 10,000 who clicked
+        once. If pipeline matters to you, lock founding pricing now.
+      </p>
+      <div class="mx-auto mt-6 max-w-md">
+        <WaitlistForm client:load variant="primary" />
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-white/5">
+    <div class="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-8 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+      <div>© {new Date().getFullYear()} Skerry · Built for founders who hate writing follow-ups.</div>
+      <div class="flex gap-5">
+        <a href="/privacy" class="hover:text-slate-300">Privacy</a>
+        <a href="/terms" class="hover:text-slate-300">Terms</a>
+        <a href="mailto:hello@skerry.cloud" class="hover:text-slate-300">hello@skerry.cloud</a>
+      </div>
+    </div>
+  </footer>
+</Layout>

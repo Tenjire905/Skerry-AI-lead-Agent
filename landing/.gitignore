@@ -1,0 +1,22 @@
+# build / cache
+dist/
+.astro/
+.wrangler/
+node_modules/
+
+# env / secrets
+.env
+.env.*
+!.env.example
+*.local
+
+# logs
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# editor
+.vscode/
+.idea/
+.DS_Store
