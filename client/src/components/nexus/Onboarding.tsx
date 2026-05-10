@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Hexagon,
   ArrowRight,
   Check,
   Users,
@@ -62,7 +61,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#050505]">
       <div className="fixed inset-0 grid-bg opacity-40 pointer-events-none" />
-      <div className="fixed inset-0 bg-gradient-to-b from-blue-500/5 via-transparent to-cyan-500/5 pointer-events-none" />
+      <div className="fixed inset-0 bg-gradient-to-b from-violet-500/5 via-transparent to-violet-500/5 pointer-events-none" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -70,9 +69,13 @@ export function Onboarding({ onComplete }: OnboardingProps) {
         className="relative z-10 w-full max-w-2xl px-6"
       >
         <div className="mb-12 flex flex-col items-center text-center">
-          <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500/30 to-cyan-300/10 ring-1 ring-cyan-300/30">
-            <Hexagon className="h-8 w-8 text-cyan-300" strokeWidth={2} />
-          </div>
+          <img
+            src="/logo.png"
+            alt="Skerry"
+            width={64}
+            height={64}
+            className="mb-6 h-16 w-16 drop-shadow-[0_0_32px_oklch(0.7_0.22_295_/_0.55)]"
+          />
           <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
             Welcome to <span className="text-gradient-cyber">Skerry</span>
           </h1>
@@ -102,7 +105,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                     <Textarea
                       id="business"
                       placeholder="e.g. We provide AI-driven marketing automation for e-commerce brands."
-                      className="min-h-[100px] bg-white/5 border-white/10 focus:border-cyan-300/50 transition-all"
+                      className="min-h-[100px] bg-white/5 border-white/10 focus:border-violet-300/50 transition-all"
                       value={profile.businessDescription}
                       onChange={e =>
                         setProfile({
@@ -122,7 +125,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                     <Textarea
                       id="customer"
                       placeholder="e.g. SaaS founders in the US with 10–50 employees."
-                      className="min-h-[100px] bg-white/5 border-white/10 focus:border-cyan-300/50 transition-all"
+                      className="min-h-[100px] bg-white/5 border-white/10 focus:border-violet-300/50 transition-all"
                       value={profile.idealCustomer}
                       onChange={e =>
                         setProfile({
@@ -142,7 +145,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                     <Textarea
                       id="problem"
                       placeholder="e.g. We help them reduce customer acquisition costs by 40% using automated outreach."
-                      className="min-h-[100px] bg-white/5 border-white/10 focus:border-cyan-300/50 transition-all"
+                      className="min-h-[100px] bg-white/5 border-white/10 focus:border-violet-300/50 transition-all"
                       value={profile.problemSolved}
                       onChange={e =>
                         setProfile({
@@ -160,7 +163,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                     !profile.idealCustomer ||
                     !profile.problemSolved
                   }
-                  className="w-full h-12 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-semibold rounded-xl shadow-lg shadow-cyan-500/20 transition-all"
+                  className="w-full h-12 bg-gradient-to-r from-violet-600 to-violet-500 hover:from-violet-500 hover:to-violet-400 text-white font-semibold rounded-xl shadow-lg shadow-violet-500/20 transition-all"
                 >
                   Continue <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -192,12 +195,12 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                           }
                           className={`relative flex items-center gap-4 rounded-2xl p-4 text-left transition-all ring-1 ${
                             active
-                              ? "bg-cyan-500/10 ring-cyan-300/50 shadow-[0_0_20px_-5px_oklch(0.78_0.18_220_/_0.3)]"
+                              ? "bg-violet-500/10 ring-violet-300/50 shadow-[0_0_20px_-5px_oklch(0.7_0.22_295_/_0.3)]"
                               : "bg-white/5 ring-white/10 hover:bg-white/10"
                           }`}
                         >
                           <div
-                            className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${active ? "bg-cyan-500/20 text-cyan-300" : "bg-white/5 text-muted-foreground"}`}
+                            className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${active ? "bg-violet-500/20 text-violet-300" : "bg-white/5 text-muted-foreground"}`}
                           >
                             <Icon className="h-6 w-6" />
                           </div>
@@ -210,7 +213,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                             </div>
                           </div>
                           {active && (
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-cyan-500 text-[#03101a]">
+                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-violet-500 text-[#03101a]">
                               <Check className="h-4 w-4 stroke-[3]" />
                             </div>
                           )}
@@ -221,7 +224,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                 </div>
                 <Button
                   onClick={handleNext}
-                  className="w-full h-12 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-semibold rounded-xl shadow-lg shadow-cyan-500/20 transition-all"
+                  className="w-full h-12 bg-gradient-to-r from-violet-600 to-violet-500 hover:from-violet-500 hover:to-violet-400 text-white font-semibold rounded-xl shadow-lg shadow-violet-500/20 transition-all"
                 >
                   Start Finding Leads <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -234,7 +237,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
           {[1, 2].map(i => (
             <div
               key={i}
-              className={`h-1.5 rounded-full transition-all duration-300 ${step === i ? "w-8 bg-cyan-400" : "w-1.5 bg-white/10"}`}
+              className={`h-1.5 rounded-full transition-all duration-300 ${step === i ? "w-8 bg-violet-400" : "w-1.5 bg-white/10"}`}
             />
           ))}
         </div>

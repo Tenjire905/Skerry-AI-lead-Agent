@@ -4,7 +4,6 @@ import {
   Users,
   Mail,
   Settings,
-  Hexagon,
   CreditCard,
 } from "lucide-react";
 import {
@@ -19,6 +18,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { Wordmark } from "@/components/nexus/Wordmark";
 import { useT } from "@/lib/i18n";
 
 const items = [
@@ -40,19 +40,14 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" className="border-r border-white/5">
       <SidebarHeader className="border-b border-white/5">
         <Link to="/" className="flex items-center gap-2.5 px-2 py-1.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500/30 to-cyan-300/10 ring-1 ring-cyan-300/30">
-            <Hexagon className="h-4 w-4 text-cyan-300" strokeWidth={2.2} />
-          </div>
-          {!collapsed && (
-            <div className="flex flex-col leading-none">
-              <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                Skerry
-              </span>
-              <span className="text-sm font-semibold text-gradient-cyber">
-                LeadGen OS
-              </span>
-            </div>
-          )}
+          <img
+            src="/logo.png"
+            alt="Skerry"
+            width={32}
+            height={32}
+            className="h-8 w-8 shrink-0 drop-shadow-[0_0_18px_oklch(0.7_0.22_295_/_0.45)]"
+          />
+          {!collapsed && <Wordmark size="sm" />}
         </Link>
       </SidebarHeader>
 

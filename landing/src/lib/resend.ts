@@ -16,11 +16,8 @@ export interface ConfirmationContext {
   founding: boolean;
 }
 
-const LOGO_SVG = `<svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <polygon points="86.4,29 50,8 13.6,29 13.6,71 50,92 86.4,71" stroke="#a78bfa" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
-  <polygon points="65.6,41 50,32 34.4,41 34.4,59 50,68 65.6,59" stroke="#a78bfa" stroke-width="3" stroke-linejoin="round"/>
-  <path d="M50 42 V58 M42 50 H58" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
-</svg>`;
+const logoImg = (siteUrl: string) =>
+  `<img src="${siteUrl}/logo.png" width="36" height="36" alt="Skerry" style="display:inline-block;vertical-align:middle;" />`;
 
 export function renderConfirmationEmail(ctx: ConfirmationContext): {
   subject: string;
@@ -42,9 +39,9 @@ export function renderConfirmationEmail(ctx: ConfirmationContext): {
   const html = `<!doctype html>
 <html><body style="margin:0;background:#06030d;color:#e2e8f0;font-family:Inter,system-ui,sans-serif;">
   <div style="max-width:560px;margin:0 auto;padding:48px 24px;">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:28px;">
-      ${LOGO_SVG}
-      <span style="font-size:14px;font-weight:600;color:#fff;letter-spacing:-0.01em;">Skerry</span>
+    <div style="margin-bottom:28px;">
+      ${logoImg(siteUrl)}
+      <span style="font-size:14px;font-weight:600;color:#fff;letter-spacing:-0.01em;margin-left:10px;vertical-align:middle;">Skerry LeadGen</span>
     </div>
     <div style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#c4b5fd;">${founding ? "Founding member" : "Waitlist confirmed"}</div>
     <h1 style="font-size:28px;font-weight:600;margin:12px 0 8px;color:#fff;line-height:1.25;">${headline}</h1>

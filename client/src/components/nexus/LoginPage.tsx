@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, Loader2, Zap, Lock, Mail, Code2 } from "lucide-react";
+import { Eye, EyeOff, Loader2, Lock, Mail, Code2 } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Wordmark } from "@/components/nexus/Wordmark";
 import { toast } from "sonner";
 
 export function LoginPage() {
@@ -35,8 +36,8 @@ export function LoginPage() {
       <div className="fixed inset-0 grid-bg pointer-events-none opacity-30" />
       {/* Glow blobs */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-40 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-blue-600/20 blur-[120px]" />
-        <div className="absolute bottom-0 right-1/4 h-72 w-72 rounded-full bg-cyan-500/15 blur-[100px]" />
+        <div className="absolute -top-40 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-violet-600/20 blur-[120px]" />
+        <div className="absolute bottom-0 right-1/4 h-72 w-72 rounded-full bg-violet-500/15 blur-[100px]" />
       </div>
 
       <motion.div
@@ -46,14 +47,16 @@ export function LoginPage() {
         className="relative z-10 w-full max-w-md"
       >
         {/* Logo / Brand */}
-        <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-400 shadow-[0_0_40px_-8px_oklch(0.78_0.18_220_/_0.7)]">
-            <Zap className="h-7 w-7 text-[#03101a]" strokeWidth={2.5} />
-          </div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            Skerry
-          </h1>
-          <p className="mt-1 text-sm font-medium text-slate-200">
+        <div className="mb-8 flex flex-col items-center text-center">
+          <img
+            src="/logo.png"
+            alt="Skerry"
+            width={56}
+            height={56}
+            className="mb-4 h-14 w-14 drop-shadow-[0_0_28px_oklch(0.7_0.22_295_/_0.55)]"
+          />
+          <Wordmark size="lg" />
+          <p className="mt-2 text-sm font-medium text-slate-200">
             Sign in to your account
           </p>
         </div>
@@ -76,7 +79,7 @@ export function LoginPage() {
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="you@company.com"
-                  className="pl-9 bg-white/5 border-white/10 focus:border-cyan-500/50 focus:ring-cyan-500/20"
+                  className="pl-9 bg-white/5 border-white/10 focus:border-violet-500/50 focus:ring-violet-500/20"
                   required
                   autoComplete="email"
                 />
@@ -98,7 +101,7 @@ export function LoginPage() {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="pl-9 pr-10 bg-white/5 border-white/10 focus:border-cyan-500/50 focus:ring-cyan-500/20"
+                  className="pl-9 pr-10 bg-white/5 border-white/10 focus:border-violet-500/50 focus:ring-violet-500/20"
                   required
                   autoComplete="current-password"
                 />
@@ -129,7 +132,7 @@ export function LoginPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full h-11 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-semibold shadow-[0_0_30px_-8px_oklch(0.78_0.18_220_/_0.6)] transition-all"
+              className="w-full h-11 bg-gradient-to-r from-violet-600 to-violet-500 hover:from-violet-500 hover:to-violet-400 text-white font-semibold shadow-[0_0_30px_-8px_oklch(0.7_0.22_295_/_0.6)] transition-all"
             >
               {loading ? (
                 <>
@@ -156,12 +159,12 @@ export function LoginPage() {
                   {
                     label: "Team",
                     email: "team@skerry.io",
-                    color: "text-blue-300",
+                    color: "text-violet-300",
                   },
                   {
                     label: "Agency",
                     email: "agency@skerry.io",
-                    color: "text-cyan-300",
+                    color: "text-violet-300",
                   },
                 ].map(acc => (
                   <button

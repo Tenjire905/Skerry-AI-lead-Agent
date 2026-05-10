@@ -56,25 +56,25 @@ export function StepProgress({ stage }: { stage: PipelineStage }) {
                     animate={{
                       backgroundColor:
                         done || active
-                          ? "oklch(0.78 0.18 220 / 0.18)"
+                          ? "oklch(0.7 0.22 295 / 0.18)"
                           : "oklch(1 0 0 / 0.04)",
                       borderColor:
                         done || active
-                          ? "oklch(0.78 0.18 220 / 0.5)"
+                          ? "oklch(0.7 0.22 295 / 0.5)"
                           : "oklch(1 0 0 / 0.1)",
                     }}
                     className="flex h-9 w-9 items-center justify-center rounded-full border"
                   >
                     {done ? (
-                      <Check className="h-4 w-4 text-cyan-300" />
+                      <Check className="h-4 w-4 text-violet-300" />
                     ) : (
                       <Icon
-                        className={`h-4 w-4 ${active ? "text-cyan-300" : "text-muted-foreground"}`}
+                        className={`h-4 w-4 ${active ? "text-violet-300" : "text-muted-foreground"}`}
                       />
                     )}
                   </motion.div>
                   {active && (
-                    <span className="absolute inset-0 -z-10 animate-ping rounded-full bg-cyan-300/30" />
+                    <span className="absolute inset-0 -z-10 animate-ping rounded-full bg-violet-300/30" />
                   )}
                 </div>
                 <div className="hidden flex-col leading-none sm:flex">
@@ -102,7 +102,7 @@ export function StepProgress({ stage }: { stage: PipelineStage }) {
                             : "0%",
                     }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="absolute inset-y-0 left-0 bg-gradient-to-r from-blue-400 to-cyan-300"
+                    className="absolute inset-y-0 left-0 bg-gradient-to-r from-violet-400 to-violet-300"
                   />
                 </div>
               )}

@@ -178,8 +178,8 @@ function SettingsPage() {
       </div>
 
       {!isDeveloper && (
-        <div className="flex items-start gap-3 rounded-xl glass p-4 ring-1 ring-cyan-500/15">
-          <ShieldCheck className="mt-0.5 h-4 w-4 flex-shrink-0 text-cyan-300" />
+        <div className="flex items-start gap-3 rounded-xl glass p-4 ring-1 ring-violet-500/15">
+          <ShieldCheck className="mt-0.5 h-4 w-4 flex-shrink-0 text-violet-300" />
           <div className="text-xs text-foreground/80">
             <div className="font-semibold text-foreground">
               All AI services are managed by Skerry.
@@ -227,16 +227,16 @@ function SettingsPage() {
                 ? "border-slate-400/40 bg-slate-500/10"
                 : "border-white/10 bg-white/5",
               team: active
-                ? "border-blue-400/40 bg-blue-500/10"
+                ? "border-blue-400/40 bg-violet-500/10"
                 : "border-white/10 bg-white/5",
               agency: active
-                ? "border-cyan-400/40 bg-cyan-500/10"
+                ? "border-violet-400/40 bg-violet-500/10"
                 : "border-white/10 bg-white/5",
             };
             const labelColors = {
               solo: "text-slate-300",
-              team: "text-blue-300",
-              agency: "text-cyan-300",
+              team: "text-violet-300",
+              agency: "text-violet-300",
             };
             return (
               <button
@@ -295,7 +295,7 @@ function SettingsPage() {
           {t("settings.language.subtitle")}
         </p>
         <div className="mt-4 inline-flex items-center gap-2 rounded-xl glass p-2">
-          <Languages className="ml-2 h-4 w-4 text-cyan-300" />
+          <Languages className="ml-2 h-4 w-4 text-violet-300" />
           {(["en", "de"] as const).map(lang => {
             const active = language === lang;
             return (
@@ -303,7 +303,7 @@ function SettingsPage() {
                 key={lang}
                 type="button"
                 onClick={() => setLanguage(lang as Language)}
-                className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${active ? "bg-cyan-300/15 text-cyan-100 ring-1 ring-cyan-300/30" : "text-muted-foreground hover:text-foreground"}`}
+                className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${active ? "bg-violet-300/15 text-violet-100 ring-1 ring-violet-300/30" : "text-muted-foreground hover:text-foreground"}`}
               >
                 {lang === "en"
                   ? t("settings.language.en")
@@ -333,7 +333,7 @@ function SettingsPage() {
                   onClick={() => setMode(themeOption.value)}
                   className={`inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium transition ${
                     active
-                      ? "bg-cyan-300/15 text-cyan-100 ring-1 ring-cyan-300/30"
+                      ? "bg-violet-300/15 text-violet-100 ring-1 ring-violet-300/30"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >

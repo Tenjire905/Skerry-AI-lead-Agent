@@ -156,14 +156,14 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
 
   const tierColors: Record<AccountTier, string> = {
     solo: "from-slate-500 to-slate-400",
-    team: "from-blue-600 to-blue-400",
-    agency: "from-blue-600 to-cyan-400",
+    team: "from-violet-600 to-violet-400",
+    agency: "from-violet-600 to-violet-400",
   };
 
   const tierBadgeColors: Record<AccountTier, string> = {
     solo: "border-slate-500/30 text-slate-400 bg-slate-500/5",
-    team: "border-blue-500/30 text-blue-400 bg-blue-500/5",
-    agency: "border-cyan-500/30 text-cyan-400 bg-cyan-500/5",
+    team: "border-violet-500/30 text-violet-400 bg-violet-500/5",
+    agency: "border-violet-500/30 text-violet-400 bg-violet-500/5",
   };
 
   const runGuard = canStartRun(tier);
@@ -258,7 +258,7 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
                             key={i}
                             className="flex items-center gap-2 text-xs text-muted-foreground"
                           >
-                            <ChevronRight className="h-3 w-3 text-cyan-500/50" />
+                            <ChevronRight className="h-3 w-3 text-violet-500/50" />
                             {step}
                           </div>
                         ))}
@@ -283,7 +283,7 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
                       </div>
                     )}
 
-                    <div className="flex items-start gap-2 rounded-lg bg-cyan-500/10 border border-cyan-500/20 px-3 py-2.5 text-xs text-cyan-300">
+                    <div className="flex items-start gap-2 rounded-lg bg-violet-500/10 border border-violet-500/20 px-3 py-2.5 text-xs text-violet-300">
                       <Lock className="h-3.5 w-3.5 mt-0.5 flex-shrink-0" />
                       <span>
                         Lead generation runs server-side with protected keys and
@@ -317,7 +317,7 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
                     className="space-y-5"
                   >
                     <div className="flex items-center gap-3">
-                      <Loader2 className="h-5 w-5 animate-spin text-cyan-400" />
+                      <Loader2 className="h-5 w-5 animate-spin text-violet-400" />
                       <div>
                         <p className="text-sm font-medium text-foreground">
                           Research in progress…
@@ -338,7 +338,7 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
                           animate={{ opacity: 1, x: 0 }}
                           className={`flex items-start gap-3 rounded-lg px-3 py-2.5 text-xs transition ${
                             step.status === "running"
-                              ? "bg-cyan-500/10 border border-cyan-500/20"
+                              ? "bg-violet-500/10 border border-violet-500/20"
                               : step.status === "done"
                                 ? "bg-white/5"
                                 : "opacity-40"
@@ -348,7 +348,7 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
                             {step.status === "done" ? (
                               <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
                             ) : step.status === "running" ? (
-                              <Loader2 className="h-3.5 w-3.5 animate-spin text-cyan-400" />
+                              <Loader2 className="h-3.5 w-3.5 animate-spin text-violet-400" />
                             ) : (
                               <div className="h-3.5 w-3.5 rounded-full border border-white/20" />
                             )}
@@ -357,7 +357,7 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
                             <span
                               className={
                                 step.status === "running"
-                                  ? "text-cyan-300"
+                                  ? "text-violet-300"
                                   : "text-foreground/80"
                               }
                             >
@@ -421,7 +421,7 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
                           key={stat.label}
                           className="rounded-lg bg-white/5 px-3 py-3"
                         >
-                          <stat.icon className="mx-auto mb-1 h-4 w-4 text-cyan-400" />
+                          <stat.icon className="mx-auto mb-1 h-4 w-4 text-violet-400" />
                           <p className="text-base font-bold text-foreground">
                             {stat.value}
                           </p>
@@ -434,7 +434,7 @@ export function FindLeadsModal({ open, onClose }: FindLeadsModalProps) {
 
                     <Button
                       onClick={handleDone}
-                      className="w-full h-11 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold"
+                      className="w-full h-11 bg-gradient-to-r from-violet-600 to-violet-500 text-white font-semibold"
                     >
                       View Leads
                     </Button>

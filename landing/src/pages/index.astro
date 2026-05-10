@@ -2,39 +2,14 @@
 import Layout from "@/layouts/Layout.astro";
 import WaitlistForm from "@/components/WaitlistForm.tsx";
 import FoundingDepositCTA from "@/components/FoundingDepositCTA.tsx";
+import Wordmark from "@/components/Wordmark.astro";
 ---
 
 <Layout>
   <!-- NAV -->
   <header class="mx-auto flex max-w-6xl items-center justify-between px-6 pt-8">
-    <a href="/" class="flex items-center gap-2.5">
-      <svg
-        viewBox="0 0 100 100"
-        class="h-9 w-9 drop-shadow-[0_0_18px_rgba(167,139,250,0.45)]"
-        fill="none"
-        aria-hidden="true"
-      >
-        <polygon
-          points="86.4,29 50,8 13.6,29 13.6,71 50,92 86.4,71"
-          stroke="#a78bfa"
-          stroke-width="5"
-          stroke-linejoin="round"
-          stroke-linecap="round"></polygon>
-        <polygon
-          points="65.6,41 50,32 34.4,41 34.4,59 50,68 65.6,59"
-          stroke="#a78bfa"
-          stroke-width="3"
-          stroke-linejoin="round"></polygon>
-        <path
-          d="M50 42 V58 M42 50 H58"
-          stroke="#ffffff"
-          stroke-width="3.5"
-          stroke-linecap="round"></path>
-      </svg>
-      <span class="text-sm font-semibold tracking-tight text-white">Skerry</span>
-      <span class="hidden text-xs uppercase tracking-[0.22em] text-brand-300/80 sm:inline">
-        · Lead-Gen OS
-      </span>
+    <a href="/" class="hover:opacity-90 transition">
+      <Wordmark size="md" collapseOnMobile />
     </a>
     <nav class="hidden items-center gap-7 text-sm text-slate-400 md:flex">
       <a href="#how" class="hover:text-white">How it works</a>

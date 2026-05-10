@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" role="img" aria-label="Skerry">
-  <polygon points="86.4,29 50,8 13.6,29 13.6,71 50,92 86.4,71"
-    stroke="#a78bfa" stroke-width="5" stroke-linejoin="round" stroke-linecap="round" />
-  <polygon points="65.6,41 50,32 34.4,41 34.4,59 50,68 65.6,59"
-    stroke="#a78bfa" stroke-width="3" stroke-linejoin="round" />
-  <path d="M50 42 V58 M42 50 H58"
-    stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" />
-</svg>

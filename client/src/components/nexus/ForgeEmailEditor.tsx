@@ -87,7 +87,7 @@ export function ForgeEmailEditor({
             onClick={handlePush}
             disabled={status === "sending"}
             data-testid="forge-push-button"
-            className="group inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-blue-500 to-cyan-400 px-3 py-1.5 text-[11px] font-semibold text-[#03101a] shadow-[0_0_24px_-8px_oklch(0.78_0.18_220_/_0.7)] transition hover:scale-[1.03] disabled:opacity-60 disabled:hover:scale-100"
+            className="group inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-violet-500 to-violet-400 px-3 py-1.5 text-[11px] font-semibold text-[#03101a] shadow-[0_0_24px_-8px_oklch(0.7_0.22_295_/_0.7)] transition hover:scale-[1.03] disabled:opacity-60 disabled:hover:scale-100"
           >
             <AnimatePresence mode="wait" initial={false}>
               {status === "idle" && (
@@ -156,7 +156,7 @@ export function ForgeEmailEditor({
       ) : (
         <article
           data-testid="forge-email-preview"
-          className="prose prose-invert max-w-none px-5 pb-6 pt-2 max-h-[460px] overflow-y-auto prose-headings:tracking-tight prose-h1:text-2xl prose-h1:font-semibold prose-h1:bg-gradient-to-r prose-h1:from-blue-300 prose-h1:to-cyan-200 prose-h1:bg-clip-text prose-h1:text-transparent prose-h2:text-xs prose-h2:uppercase prose-h2:tracking-[0.18em] prose-h2:text-cyan-200/90 prose-p:text-sm prose-p:text-foreground/85 prose-strong:text-cyan-200 prose-blockquote:border-l-cyan-300/40 prose-blockquote:text-foreground/70 prose-blockquote:text-sm prose-hr:border-white/5"
+          className="prose prose-invert max-w-none px-5 pb-6 pt-2 max-h-[460px] overflow-y-auto prose-headings:tracking-tight prose-h1:text-2xl prose-h1:font-semibold prose-h1:bg-gradient-to-r prose-h1:from-violet-300 prose-h1:to-violet-200 prose-h1:bg-clip-text prose-h1:text-transparent prose-h2:text-xs prose-h2:uppercase prose-h2:tracking-[0.18em] prose-h2:text-violet-200/90 prose-p:text-sm prose-p:text-foreground/85 prose-strong:text-violet-200 prose-blockquote:border-l-violet-300/40 prose-blockquote:text-foreground/70 prose-blockquote:text-sm prose-hr:border-white/5"
         >
           <ReactMarkdown>{editedBody}</ReactMarkdown>
         </article>

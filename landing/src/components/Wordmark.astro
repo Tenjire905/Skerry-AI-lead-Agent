@@ -1,0 +1,54 @@
+---
+/**
+ * Skerry brand wordmark — "Skerry LeadGen ⬡S".
+ *
+ * The logo replaces the "O" in "OS" so the product name reads as one
+ * cohesive shape rather than icon-plus-text. Sizes use em so the icon
+ * scales with whatever font-size the parent sets.
+ */
+interface Props {
+  size?: "sm" | "md" | "lg" | "xl";
+  class?: string;
+  /**
+   * Mobile-friendly fallback. When true, the "LeadGen" middle word is
+   * hidden under sm breakpoints so the wordmark stays readable in tight
+   * nav bars: "Skerry ⬡S".
+   */
+  collapseOnMobile?: boolean;
+}
+
+const {
+  size = "md",
+  class: className = "",
+  collapseOnMobile = false,
+} = Astro.props;
+
+const sizeClass = {
+  sm: "text-sm",
+  md: "text-base",
+  lg: "text-2xl",
+  xl: "text-4xl sm:text-5xl",
+}[size];
+---
+
+<span
+  class:list={[
+    "inline-flex items-baseline gap-x-1.5 font-semibold tracking-tight text-white",
+    sizeClass,
+    className,
+  ]}
+>
+  <span>Skerry</span>
+  <span class:list={[collapseOnMobile && "hidden sm:inline"]}>LeadGen</span>
+  <span class="inline-flex items-baseline">
+    <img
+      src="/logo.png"
+      alt=""
+      aria-hidden="true"
+      class="h-[1em] w-[1em] translate-y-[0.18em] select-none"
+      width="32"
+      height="32"
+    />
+    <span>S</span>
+  </span>
+</span>

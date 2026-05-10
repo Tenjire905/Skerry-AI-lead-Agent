@@ -44,8 +44,8 @@ function WorkspacePage() {
   if (!lead) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center text-center px-6">
-        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-cyan-500/10 ring-1 ring-cyan-500/20">
-          <Sparkles className="h-6 w-6 text-cyan-300" />
+        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-violet-500/10 ring-1 ring-violet-500/20">
+          <Sparkles className="h-6 w-6 text-violet-300" />
         </div>
         <h2 className="text-xl font-semibold text-foreground">
           No leads in your workspace yet
@@ -86,15 +86,15 @@ function WorkspacePage() {
                   onClick={() => select(l.id)}
                   className={`group flex items-center gap-2 rounded-md px-3 py-1.5 text-xs ring-1 transition ${
                     active
-                      ? "bg-white/10 text-foreground ring-cyan-300/40"
+                      ? "bg-white/10 text-foreground ring-violet-300/40"
                       : "bg-white/5 text-muted-foreground ring-white/10 hover:text-foreground"
                   }`}
                 >
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-blue-500/30 to-cyan-300/10 text-[10px] font-semibold text-cyan-100 ring-1 ring-white/10">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-violet-500/30 to-violet-300/10 text-[10px] font-semibold text-violet-100 ring-1 ring-white/10">
                     {l.personal.firstName[0]}
                   </span>
                   {l.personal.firstName} · {l.organization.name}
-                  {active && <ChevronRight className="h-3 w-3 text-cyan-300" />}
+                  {active && <ChevronRight className="h-3 w-3 text-violet-300" />}
                 </button>
               );
             })}
@@ -158,7 +158,7 @@ function IntelligenceCenter({
             {t("workspace.intel.title")}
           </div>
         </div>
-        <Sparkles className="h-4 w-4 text-cyan-300" />
+        <Sparkles className="h-4 w-4 text-violet-300" />
       </div>
 
       <div className="mt-4 flex gap-1 rounded-lg bg-black/20 p-1 ring-1 ring-white/5">
@@ -180,7 +180,7 @@ function IntelligenceCenter({
               {active && (
                 <motion.span
                   layoutId="intel-pill"
-                  className="absolute inset-0 -z-10 rounded-md bg-white/8 ring-1 ring-cyan-300/30"
+                  className="absolute inset-0 -z-10 rounded-md bg-white/8 ring-1 ring-violet-300/30"
                   transition={{ type: "spring", stiffness: 400, damping: 32 }}
                 />
               )}
@@ -229,9 +229,9 @@ function IntelligenceCenter({
               {lead.extraction.uniqueAngles.map((a, i) => (
                 <div
                   key={i}
-                  className="group flex items-start gap-3 rounded-lg bg-white/[0.03] p-3 ring-1 ring-white/5 transition hover:ring-cyan-300/30 hover:shadow-[0_0_24px_-10px_oklch(0.78_0.18_220_/_0.5)]"
+                  className="group flex items-start gap-3 rounded-lg bg-white/[0.03] p-3 ring-1 ring-white/5 transition hover:ring-violet-300/30 hover:shadow-[0_0_24px_-10px_oklch(0.7_0.22_295_/_0.5)]"
                 >
-                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cyan-300/15 text-[10px] font-semibold text-cyan-200 ring-1 ring-cyan-300/30">
+                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-violet-300/15 text-[10px] font-semibold text-violet-200 ring-1 ring-violet-300/30">
                     0{i + 1}
                   </span>
                   <div className="text-sm font-medium text-foreground/90">

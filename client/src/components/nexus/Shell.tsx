@@ -74,8 +74,8 @@ export function Shell() {
 
   const tierColors: Record<string, string> = {
     solo: "border-slate-500/30 text-slate-400 bg-slate-500/5",
-    team: "border-blue-500/30 text-blue-400 bg-blue-500/5",
-    agency: "border-cyan-500/30 text-cyan-400 bg-cyan-500/5",
+    team: "border-violet-500/30 text-violet-400 bg-violet-500/5",
+    agency: "border-violet-500/30 text-violet-400 bg-violet-500/5",
   };
 
   const initials = user?.name
@@ -117,7 +117,7 @@ export function Shell() {
 
               <button
                 onClick={() => setShowFindLeads(true)}
-                className="flex items-center gap-2 rounded-md bg-gradient-to-r from-blue-500 to-cyan-400 px-3.5 py-1.5 text-xs font-semibold text-[#03101a] shadow-[0_0_30px_-8px_oklch(0.78_0.18_220_/_0.8)] transition hover:scale-[1.02] active:scale-[0.98]"
+                className="flex items-center gap-2 rounded-md bg-gradient-to-r from-violet-500 to-violet-400 px-3.5 py-1.5 text-xs font-semibold text-[#03101a] shadow-[0_0_30px_-8px_oklch(0.7_0.22_295_/_0.8)] transition hover:scale-[1.02] active:scale-[0.98]"
               >
                 <Activity className="h-3.5 w-3.5" />
                 Find New Leads
@@ -148,7 +148,7 @@ export function Shell() {
                       </div>
                     </div>
                     <Avatar className="h-8 w-8 border border-white/10 ring-1 ring-white/5">
-                      <AvatarFallback className="bg-gradient-to-br from-blue-600/30 to-cyan-400/20 text-[10px] font-semibold text-cyan-300">
+                      <AvatarFallback className="bg-gradient-to-br from-violet-600/30 to-violet-400/20 text-[10px] font-semibold text-violet-300">
                         {initials}
                       </AvatarFallback>
                     </Avatar>

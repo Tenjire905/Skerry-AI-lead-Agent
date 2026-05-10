@@ -33,14 +33,14 @@ export function LeadCard({ lead, onSelect }: LeadCardProps) {
       layout
       className="col-span-12 lg:col-span-4 relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl"
     >
-      <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-cyan-400/15 blur-3xl" />
+      <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-violet-400/15 blur-3xl" />
 
       <Wrapper
         className="relative flex w-full items-center gap-4 text-left"
         {...wrapperProps}
       >
         <div className="relative">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500/40 to-cyan-300/20 text-base font-semibold text-cyan-100 ring-1 ring-cyan-300/30">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500/40 to-violet-300/20 text-base font-semibold text-violet-100 ring-1 ring-violet-300/30">
             {lead.personal.firstName[0]}
             {lead.personal.lastName[0]}
           </div>
@@ -121,7 +121,7 @@ function Row({
   const content = (
     <>
       <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-white/5 ring-1 ring-white/10">
-        <Icon className="h-3.5 w-3.5 text-cyan-300" />
+        <Icon className="h-3.5 w-3.5 text-violet-300" />
       </div>
       <div className="min-w-0">
         <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
