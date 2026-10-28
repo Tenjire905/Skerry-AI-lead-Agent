@@ -1,6 +1,6 @@
 // Apify LinkedIn People Search
 // Env: APIFY_API_KEY
-// Actor: curious_coder~linkedin-people-search
+// Actor: johnvc~linkedin-people-search-api
 
 export interface ApifyLead {
   firstName: string;
@@ -21,7 +21,7 @@ export async function discoverLeadsApify(params: {
   if (!apiKey) throw new Error("APIFY_API_KEY_MISSING");
 
   const actorId =
-    process.env.APIFY_LEADS_ACTOR_ID ?? "curious_coder~linkedin-people-search";
+    process.env.APIFY_LEADS_ACTOR_ID ?? "johnvc~linkedin-people-search-api";
   const runUrl = `https://api.apify.com/v2/acts/${actorId}/runs?token=${apiKey}`;
 
   // Start run
@@ -29,9 +29,9 @@ export async function discoverLeadsApify(params: {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      searchQuery: params.searchQuery,
+      keywords: params.searchQuery,
       maxResults: params.maxResults,
-      proxy: { useApifyProxy: true, apifyProxyGroups: ["RESIDENTIAL"] },
+      enrichProfiles: false,
     }),
   });
   if (!runResp.ok) throw new Error(`Apify run start failed: ${runResp.status}`);
@@ -53,12 +53,30 @@ export async function discoverLeadsApify(params: {
       );
       const items = (await dataResp.json()) as Record<string, unknown>[];
       return items.map(item => ({
-        firstName: String(item["firstName"] ?? item["first_name"] ?? ""),
-        lastName: String(item["lastName"] ?? item["last_name"] ?? ""),
-        title: String(item["title"] ?? item["jobTitle"] ?? "Executive"),
+        firstName: String(
+          item["firstName"] ??
+            item["first_name"] ??
+            String(item["fullName"] ?? "").split(" ")[0]
+        ),
+        lastName: String(
+          item["lastName"] ??
+            item["last_name"] ??
+            String(item["fullName"] ?? "").split(" ").slice(1).join(" ")
+        ),
+        title: String(
+          item["title"] ??
+            item["jobTitle"] ??
+            item["currentTitle"] ??
+            item["headline"] ??
+            "Executive"
+        ),
         email: item["email"] ? String(item["email"]) : undefined,
-        linkedinUrl: String(item["url"] ?? item["linkedinUrl"] ?? ""),
-        companyName: String(item["companyName"] ?? item["company"] ?? ""),
+        linkedinUrl: String(
+          item["url"] ?? item["linkedinUrl"] ?? item["profileUrl"] ?? ""
+        ),
+        companyName: String(
+          item["companyName"] ?? item["company"] ?? item["currentCompany"] ?? ""
+        ),
         companyWebsite: item["companyWebsite"]
           ? String(item["companyWebsite"])
           : undefined,
